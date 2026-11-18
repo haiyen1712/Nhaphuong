@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trường Giang — AI Data Analytics Agent B2B</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#fff5f7;
+  --bg-card:rgba(255,255,255,0.92);
+  --bg-card-solid:#ffffff;
+  --bg-hover:#fff1f2;
+  --bg-muted:#fdf2f8;
+  --border:#fbcfe8;
+  --border-light:#fce7f3;
+  --border-strong:#f9a8d4;
+  --accent:#ec4899;
+  --accent-dark:#db2777;
+  --accent-deep:#be185d;
+  --accent-light:#fce7f3;
+  --accent-soft:#fdf2f8;
+  --accent-bg:rgba(236,72,153,.08);
+  --gradient:linear-gradient(135deg,#ec4899 0%,#f43f5e 55%,#a855f7 100%);
+  --gradient-hero:linear-gradient(135deg,#831843 0%,#be185d 45%,#ec4899 100%);
+  --green:#16a34a;--green-light:#dcfce7;
+  --blue:#2563eb;--blue-light:#dbeafe;
+  --orange:#ea580c;--orange-light:#ffedd5;
+  --purple:#9333ea;--purple-light:#f3e8ff;
+  --red:#e11d48;--red-light:#ffe4e6;
+  --amber:#b45309;--amber-light:#fef3c7;
+  --t1:#1e1b2e;--t2:#4a3b47;--t3:#7e6577;--t4:#a88fa1;
+  --r:16px;--r-sm:10px;
+  --shadow:0 4px 20px rgba(236,72,153,0.08),0 1px 4px rgba(190,24,93,0.04);
+  --shadow-md:0 10px 30px rgba(219,39,119,0.14);
+  --tr:0.25s cubic-bezier(0.4,0,0.2,1);
+}
+html{font-size:14px}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(at 10% 10%, rgba(244,114,182,0.22) 0px, transparent 50%),
+    radial-gradient(at 90% 15%, rgba(192,132,252,0.18) 0px, transparent 50%),
+    radial-gradient(at 50% 85%, rgba(251,113,133,0.16) 0px, transparent 55%),
+    radial-gradient(#fbcfe8 1px, transparent 1px);
+  background-size:100% 100%, 100% 100%, 100% 100%, 24px 24px;
+  background-attachment:fixed;
+  color:var(--t1);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* FLOATING DECORATIVE ORNAMENTS */
+.bg-orb{position:fixed;border-radius:50%;filter:blur(70px);z-index:-1;pointer-events:none;opacity:0.45;animation:floatOrb 14s ease-in-out infinite alternate}
+.orb-1{width:340px;height:340px;background:#f472b6;top:-80px;left:-90px}
+.orb-2{width:380px;height:380px;background:#c084fc;bottom:-100px;right:-100px;animation-delay:-5s}
+.orb-3{width:240px;height:240px;background:#fb7185;top:45%;left:75%;animation-duration:18s}
+@keyframes floatOrb{0%{transform:translate(0,0) scale(1)}100%{transform:translate(24px,-20px) scale(1.08)}}
+
+.petal-decor{position:fixed;pointer-events:none;z-index:0;opacity:0.35;font-size:18px;animation:floatPetal 9s ease-in-out infinite}
+@keyframes floatPetal{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(12deg)}}
+
+/* TOPBAR */
+.topbar{
+  background:rgba(255,255,255,0.88);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1.5px solid var(--border);
+  padding:0 32px;height:68px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 4px 20px rgba(236,72,153,0.07);
+}
+.tb-left{display:flex;align-items:center;gap:14px}
+.logo{
+  width:42px;height:42px;background:var(--gradient);border-radius:12px;
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;letter-spacing:-0.5px;
+  box-shadow:0 4px 12px rgba(236,72,153,0.35);
+  transition:transform var(--tr);
+}
+.logo:hover{transform:rotate(-5deg) scale(1.05)}
+.topbar h1{font-size:1.12rem;font-weight:800;background:var(--gradient-hero);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-sub{font-size:.73rem;color:var(--t3);font-weight:500}
+.tag{
+  font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:20px;
+  background:var(--accent-light);color:var(--accent-deep);border:1px solid var(--border-strong)
+}
+.tb-right{display:flex;align-items:center;gap:14px}
+.tb-right .info{text-align:right}
+.tb-right .name{font-weight:700;font-size:.9rem;color:var(--accent-deep)}
+.tb-right .role{font-size:.75rem;color:var(--t3)}
+.avatar-wrap{position:relative}
+.avatar{
+  width:38px;height:38px;border-radius:50%;background:var(--gradient);
+  display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;
+  border:2px solid #fff;box-shadow:0 0 0 2px var(--accent)
+}
+.status-dot{position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:#10b981;border:2px solid #fff}
+
+.container{max-width:1240px;margin:0 auto;padding:22px 28px;position:relative;z-index:1}
+
+/* HERO SHOWCASE BANNER */
+.hero-banner{
+  background:var(--gradient-hero);
+  color:#fff;
+  border-radius:var(--r);
+  padding:22px 28px;
+  margin-bottom:18px;
+  box-shadow:var(--shadow-md);
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.2);
+}
+.hero-banner::before{
+  content:'';position:absolute;right:-60px;top:-60px;width:240px;height:240px;
+  border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;
+}
+.hero-banner::after{
+  content:'🌸 ✨ 💼';position:absolute;right:24px;top:14px;font-size:1.1rem;opacity:0.55;letter-spacing:4px;pointer-events:none;
+}
+.hero-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-title h2{font-size:1.35rem;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px}
+.hero-title p{font-size:.86rem;color:#fce7f3;max-width:720px;line-height:1.5}
+.hero-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;position:relative;z-index:1}
+.hero-pill{
+  background:rgba(255,255,255,0.14);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:10px;
+  padding:8px 14px;
+  font-size:.78rem;
+  font-weight:600;
+  color:#fff;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-flow-toggle{
+  background:rgba(255,255,255,0.2);color:#fff;border:1px solid rgba(255,255,255,0.4);
+  padding:8px 14px;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;
+  transition:var(--tr);backdrop-filter:blur(6px);font-family:inherit
+}
+.btn-flow-toggle:hover{background:#fff;color:var(--accent-deep)}
+
+/* 8-STEP VISUAL FLOW STRIP */
+.flow-strip{
+  background:var(--bg-card);
+  backdrop-filter:blur(10px);
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  padding:14px 18px;
+  margin-bottom:18px;
+  box-shadow:var(--shadow);
+  animation:fadeIn .3s ease;
+}
+.flow-strip-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.flow-strip-head span{font-size:.76rem;font-weight:800;text-transform:uppercase;color:var(--accent-deep);letter-spacing:0.4px}
+.flow-nodes{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.f-node{
+  background:var(--accent-soft);border:1px solid var(--border);border-radius:10px;
+  padding:8px 6px;text-align:center;transition:var(--tr);position:relative;
+}
+.f-node.cur{background:var(--gradient);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(236,72,153,0.3);transform:translateY(-2px)}
+.f-node.passed{background:#dcfce7;border-color:#86efac;color:#15803d}
+.f-node .fi{font-size:1.05rem;display:block;margin-bottom:2px}
+.f-node .ft{font-size:.67rem;font-weight:700;line-height:1.2}
+
+/* STEPPER */
+.stepper{
+  background:var(--bg-card);backdrop-filter:blur(12px);
+  border-radius:var(--r);box-shadow:var(--shadow);border:1.5px solid var(--border);
+  padding:20px 24px;margin-bottom:22px;display:flex;
+}
+.st{flex:1;position:relative;text-align:center;cursor:default;user-select:none}
+.st::after{content:'';position:absolute;top:18px;left:calc(50% + 24px);right:calc(-50% + 24px);height:3px;background:var(--border-light);border-radius:2px;z-index:0;transition:background .3s}
+.st:last-child::after{display:none}
+.st.done::after{background:var(--gradient)}
+.st-dot{
+  width:36px;height:36px;border-radius:50%;display:inline-grid;place-items:center;
+  font-weight:800;font-size:.86rem;position:relative;z-index:1;
+  background:var(--bg-muted);color:var(--t4);border:2px solid var(--border);
+  transition:all .3s;
+}
+.st.active .st-dot{
+  background:var(--accent-light);color:var(--accent-deep);border-color:var(--accent);
+  box-shadow:0 0 0 6px rgba(236,72,153,0.18);transform:scale(1.08);
+}
+.st.done .st-dot{background:var(--gradient);color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(236,72,153,0.3)}
+.st.done{cursor:pointer}
+.st.done:hover .st-label{color:var(--accent-deep);text-decoration:underline}
+.st-label{font-size:.82rem;font-weight:700;color:var(--t2);margin-top:8px}
+.st.active .st-label{color:var(--accent-deep)}
+.st.pending .st-label{color:var(--t4)}
+.st-sub{font-size:.7rem;color:var(--t3);margin-top:2px}
+
+/* PANELS */
+.panel{display:none;animation:fadeIn .35s ease}
+.panel.visible{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.panel-head h2{font-size:1.3rem;font-weight:800;color:var(--t1)}
+.panel-head p{color:var(--t3);font-size:.88rem;margin-top:4px;max-width:740px}
+.chip{
+  display:inline-block;font-size:.7rem;font-weight:800;padding:4px 12px;border-radius:20px;
+  background:var(--accent-light);color:var(--accent-deep);border:1px solid var(--border-strong);
+  margin-bottom:6px;letter-spacing:.4px;
+}
+
+.card{
+  background:var(--bg-card);backdrop-filter:blur(12px);
+  border-radius:var(--r);box-shadow:var(--shadow);border:1.5px solid var(--border);
+  padding:22px;margin-bottom:16px;transition:transform var(--tr), box-shadow var(--tr);
+}
+.card:hover{box-shadow:var(--shadow-md)}
+.card h3{font-size:.98rem;font-weight:800;margin-bottom:14px;color:var(--accent-deep);display:flex;align-items:center;gap:8px}
+
+.actions{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-top:8px;padding:16px 0}
+.actions .right{display:flex;gap:10px;margin-left:auto;flex-wrap:wrap}
+
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--r-sm);
+  font-size:.88rem;font-weight:700;border:none;cursor:pointer;transition:var(--tr);
+  font-family:inherit;text-decoration:none;
+}
+.btn-primary{background:var(--gradient);color:#fff;box-shadow:0 4px 14px rgba(236,72,153,0.28)}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06);transform:translateY(-2px);box-shadow:0 6px 20px rgba(236,72,153,0.38)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-outline{background:#fff;border:1.5px solid var(--border-strong);color:var(--accent-deep)}
+.btn-outline:hover:not(:disabled){background:var(--accent-soft);border-color:var(--accent)}
+.btn-blue{background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff}
+.btn-blue:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.btn-sm{padding:7px 14px;font-size:.82rem}
+
+/* UPLOAD */
+.upload-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-bottom:18px}
+.upload{
+  background:var(--bg-card);border:2.5px dashed var(--border-strong);border-radius:var(--r);
+  padding:38px 28px;text-align:center;transition:var(--tr);box-shadow:var(--shadow);
+}
+.upload.drag,.upload:hover{border-color:var(--accent);background:var(--accent-bg)}
+.upload-icon{
+  width:64px;height:64px;border-radius:50%;background:var(--accent-light);color:var(--accent);
+  display:inline-grid;place-items:center;margin-bottom:14px;font-size:28px;
+  border:2px solid var(--border-strong);animation:bounceSoft 3s ease-in-out infinite;
+}
+@keyframes bounceSoft{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.upload h2{font-size:1.15rem;font-weight:800;margin-bottom:6px;color:var(--accent-deep)}
+.upload p{font-size:.88rem;color:var(--t3);margin-bottom:18px}
+input[type=file]{display:none}
+.input-text{
+  width:100%;padding:10px 14px;border-radius:var(--r-sm);border:1.5px solid var(--border);
+  font-family:inherit;font-size:.86rem;outline:none;transition:var(--tr);background:#fff;
+}
+.input-text:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(236,72,153,0.15)}
+
+/* REFERENCE CATALOG CARDS (DECORATION + DOMAIN DATA) */
+.ref-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-top:8px}
+.tier-item{
+  display:flex;justify-content:space-between;align-items:center;padding:8px 12px;
+  background:var(--accent-soft);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;font-size:.8rem;
+}
+.rep-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+.rep-chip{
+  background:#fff;border:1px solid var(--border);border-radius:8px;padding:7px 10px;
+  font-size:.76rem;display:flex;align-items:center;gap:8px;
+}
+.rep-id{background:var(--accent-light);color:var(--accent-deep);font-weight:800;padding:2px 6px;border-radius:6px;font-size:.7rem}
+
+/* ALERTS */
+.alert{border-radius:var(--r);padding:16px 18px;margin-bottom:16px;font-size:.88rem;line-height:1.55}
+.alert b{display:block;margin-bottom:4px;font-size:.95rem}
+.alert ul{margin:6px 0 0 18px}
+.alert.err{background:var(--red-light);color:#9f1239;border:1px solid #fecdd3}
+.alert.ok{background:#f0fdf4;color:#14532d;border:1.5px solid #bbf7d0}
+.alert.warn{background:var(--amber-light);color:var(--amber);border:1.5px solid #fde68a}
+.alert.info{background:var(--accent-soft);color:var(--accent-deep);border:1.5px solid var(--border-strong)}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{
+  background:var(--bg-card);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);
+  border:1.5px solid var(--border);position:relative;overflow:hidden;transition:transform var(--tr);
+}
+.kpi:hover{transform:translateY(-3px)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--gradient)}
+.kpi-label{font-size:.73rem;color:var(--t3);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.kpi-val{font-size:1.5rem;font-weight:800}
+.kpi-sub{font-size:.75rem;color:var(--t3);margin-top:4px}
+.badge{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:20px;display:inline-block}
+.badge.g{background:var(--green-light);color:var(--green)}
+.badge.r{background:var(--red-light);color:var(--red)}
+.badge.o{background:var(--amber-light);color:var(--amber)}
+.badge.b{background:var(--accent-light);color:var(--accent-deep)}
+.badge.m{background:var(--bg-muted);color:var(--t3)}
+
+/* CLEAN */
+.clean-grid{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 8px;border-bottom:1px solid var(--border-light);font-size:.83rem;cursor:pointer;line-height:1.4;border-radius:8px;transition:background var(--tr)}
+.opt:hover{background:var(--bg-hover)}
+.opt:last-child{border-bottom:none}
+.opt input{margin-top:2px;accent-color:var(--accent);width:17px;height:17px;flex-shrink:0}
+.opt .cnt{margin-left:auto;font-weight:800;font-size:.74rem;padding:2px 9px;border-radius:12px;background:var(--bg-muted);color:var(--t3);flex-shrink:0}
+.opt .cnt.hit{background:var(--accent-light);color:var(--accent-deep);border:1px solid var(--border-strong)}
+.rule-sample-box{background:#fff;border:1px dashed var(--border-strong);border-radius:8px;padding:8px 10px;margin:4px 0 8px 26px;font-size:.76rem;color:var(--t2);display:none}
+.rule-sample-box.show{display:block}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border:1.5px solid var(--border);border-radius:var(--r-sm);background:#fff}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--accent-light)}
+th{text-align:left;padding:10px 12px;font-size:.7rem;font-weight:800;color:var(--accent-deep);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap;border-bottom:1.5px solid var(--border-strong)}
+td{padding:10px 12px;font-size:.82rem;border-bottom:1px solid var(--border-light);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--bg-hover)}
+.amt{font-variant-numeric:tabular-nums;text-align:right}
+
+/* PROCESS */
+.proc-list{display:flex;flex-direction:column;gap:12px}
+.proc{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border:1.5px solid var(--border);border-radius:var(--r-sm);background:#fff;transition:all .3s}
+.proc .dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:.85rem;background:var(--bg-muted);color:var(--t4);border:2px solid var(--border-strong);flex-shrink:0}
+.proc.run{border-color:var(--accent);background:var(--accent-soft)}
+.proc.run .dot{background:var(--accent-light);color:var(--accent-deep);border-color:var(--accent);animation:pulse 1.2s infinite}
+.proc.done{border-color:#86efac;background:#f0fdf4}
+.proc.done .dot{background:var(--green);color:#fff;border-color:var(--green)}
+.proc .t{font-weight:800;font-size:.93rem;color:var(--t1);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tool-tag{font-family:ui-monospace,Consolas,monospace;font-size:.7rem;background:var(--accent-light);color:var(--accent-deep);padding:2px 8px;border-radius:6px;border:1px solid var(--border-strong)}
+.proc .d{font-size:.82rem;color:var(--t3);margin-top:3px}
+.proc .r{font-size:.8rem;color:var(--green);font-weight:700;margin-top:5px}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(236,72,153,.35)}50%{box-shadow:0 0 0 8px rgba(236,72,153,0)}}
+
+/* CONFIRM / DECISION DIAMOND */
+.decision-card{
+  background:linear-gradient(135deg,#fff1f2 0%,#fdf2f8 100%);
+  border:2px solid var(--accent);border-radius:var(--r);padding:20px 22px;margin-bottom:16px;
+}
+.confirm-box{display:flex;gap:12px;align-items:center;padding:16px 18px;border-radius:var(--r-sm);background:#fef3c7;border:1.5px solid #fcd34d;font-size:.88rem;cursor:pointer;margin-top:16px}
+.confirm-box input{width:19px;height:19px;accent-color:var(--accent)}
+
+/* PIPELINE HERO BANNER */
+.pipeline-banner{
+  background:var(--gradient-hero);
+  color:#fff;border-radius:var(--r);padding:24px 28px;margin-bottom:18px;
+  display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-md);
+  position:relative;overflow:hidden;
+}
+.pipeline-banner::after{content:'💎🌸✨';position:absolute;right:20px;top:10px;opacity:0.4;font-size:1.1rem}
+.pipeline-info h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#fbcfe8}
+.pipeline-info p{font-size:.84rem;color:#fce7f3;margin-top:4px}
+.pipeline-amount{font-size:2rem;font-weight:800;color:#fff;letter-spacing:-.5px;text-shadow:0 2px 12px rgba(0,0,0,0.2)}
+
+/* REPORT SUB-TABS */
+.subtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;background:var(--bg-card);padding:8px;border-radius:12px;border:1.5px solid var(--border);box-shadow:var(--shadow)}
+.stab{
+  padding:9px 16px;border-radius:8px;font-size:.83rem;font-weight:700;cursor:pointer;
+  border:none;background:transparent;color:var(--t3);transition:var(--tr);font-family:inherit;
+}
+.stab:hover{background:var(--bg-hover);color:var(--accent-deep)}
+.stab.active{background:var(--gradient);color:#fff;box-shadow:0 4px 10px rgba(236,72,153,0.25)}
+.tab-pane{display:none;animation:fadeIn .25s ease}
+.tab-pane.active{display:block}
+
+.html-preview-frame{
+  width:100%;height:880px;border:2px solid var(--border-strong);border-radius:var(--r);
+  background:#fff;box-shadow:var(--shadow-md);margin-top:12px;
+}
+
+.dossier-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+.email-box{
+  width:100%;min-height:360px;padding:14px;border-radius:10px;border:1.5px solid var(--border);
+  font-family:ui-monospace,Consolas,monospace;font-size:.8rem;line-height:1.6;background:#fffafb;color:var(--t1);resize:vertical;
+}
+.ticket-card{
+  background:#fff;border:1.5px solid var(--border-strong);border-radius:12px;padding:18px;margin-bottom:14px;
+}
+.audit-item{
+  border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;background:#fff;
+}
+
+.footer{text-align:center;padding:28px;color:var(--t3);font-size:.8rem;border-top:1.5px solid var(--border);margin-top:32px}
+
+@media(max-width:960px){
+  .container{padding:16px}
+  .kpi-grid,.flow-nodes{grid-template-columns:repeat(2,1fr)}
+  .clean-grid,.upload-grid,.ref-grid,.dossier-grid{grid-template-columns:1fr}
+  .pipeline-banner{flex-direction:column;align-items:flex-start;gap:10px}
+}
+</style>
+</head>
+<body>
+
+<!-- DECORATIVE ELEMENTS -->
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+<div class="petal-decor" style="top:14%;left:3%">🌸</div>
+<div class="petal-decor" style="top:28%;right:2.5%;animation-delay:-3s">✨</div>
+<div class="petal-decor" style="bottom:18%;left:2%;animation-delay:-6s">🌷</div>
+
+<header class="topbar">
+  <div class="tb-left">
+    <div class="logo">TG</div>
+    <div>
+      <h1>Trường Giang — AI Data Analytics Agent B2B</h1>
+    </div>
+    <span class="tag">🌸 Pink Luxury Edition</span>
+  </div>
+  <div class="tb-right">
+    <div class="info">
+      <div class="name">Trường Giang</div>
+      <div class="role">Trưởng phòng Kinh doanh</div>
+    </div>
+    <div class="avatar-wrap">
+      <div class="avatar">TG</div>
+      <div class="status-dot" title="Online"></div>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- HERO SHOWCASE BANNER -->
+  <div class="hero-banner">
+    <div class="hero-top">
+      <div class="hero-title">
+        <h2>🌸 AI Data Analytics Agent — Tự Động Hóa Quy Trình Bán Hàng B2B</h2>
+        <p>Tiếp nhận dữ liệu đa kênh, làm sạch thông minh (Profiling &amp; Cleaning), thẩm định tồn kho &amp; chính sách giá với chốt chặn Human-in-the-loop, xuất báo cáo HTML ngay trên giao diện.</p>
+      </div>
+      <button class="btn-flow-toggle" onclick="toggleFlowMap()">🗺️ Ẩn/Hiện Sơ đồ 8 Bước</button>
+    </div>
+  </div>
+
+  <!-- 8-STEP VISUAL FLOW MAP -->
+  <div class="flow-strip" id="flowMap">
+    <div class="flow-strip-head">
+      <span>🧭 BẢN ĐỒ QUY TRÌNH 8 BƯỚC CHUẨN — TRƯỜNG GIANG</span>
+      <span id="flowStatusBadge" class="badge b">Đang ở Bước 1: Nhập dữ liệu</span>
+    </div>
+    <div class="flow-nodes" id="flowNodes"></div>
+  </div>
+
+  <!-- STEPPER 5 CHẶNG -->
+  <nav class="stepper" id="stepper"></nav>
+
+  <!-- ═══ CHẶNG 1: NHẬP DỮ LIỆU ĐẦU VÀO ═══ -->
+  <section class="panel" id="p1">
+    <div class="panel-head">
+      <div>
+        <span class="chip">CHẶNG 1 / 5 · BƯỚC 1</span>
+        <h2>Nhập dữ liệu đầu vào (Data Intake)</h2>
+        <p>Tải lên file CSV, Excel (.xlsx/.xls), dán liên kết Google Sheets hoặc bấm 1 nút để nạp bộ 10 kịch bản kiểm thử ranh giới chuẩn B2B.</p>
+      </div>
+    </div>
+
+    <div id="p1Result"></div>
+
+    <div class="upload-grid">
+      <div class="upload" id="uploadBox">
+        <div class="upload-icon">☁️</div>
+        <h2 id="uploadTitle">Kéo thả hoặc chọn file dữ liệu B2B</h2>
+        <p>Hỗ trợ định dạng <b>.csv</b>, <b>.xlsx</b>, <b>.xls</b> chuẩn cấu trúc hệ thống Trường Giang</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">📁 Chọn File CSV / Excel</button>
+          <button class="btn btn-outline" onclick="useDefaultData()">🌸 Nạp 10 Kịch Bản Mẫu</button>
+        </div>
+        <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="pickFile(this)">
+      </div>
+
+      <div class="card" style="margin-bottom:0;display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <h3>🔗 Kết nối Google Sheets &amp; File Mẫu</h3>
+          <p style="font-size:.82rem;color:var(--t3);margin-bottom:10px">Dán đường dẫn Google Sheet đang chia sẻ chế độ công khai (Viewer) để Agent trích xuất tự động:</p>
+          <input type="text" id="gsUrlInput" class="input-text" placeholder="https://docs.google.com/spreadsheets/d/..." style="margin-bottom:10px">
+          <button class="btn btn-blue btn-sm" style="width:100%;justify-content:center;margin-bottom:14px" onclick="loadGoogleSheetClient()">📥 Nạp dữ liệu từ Google Sheet</button>
+        </div>
+        <div style="border-top:1px dashed var(--border-strong);padding-top:12px;display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <span style="font-size:.78rem;color:var(--t3)">Cần file chuẩn cấu trúc?</span>
+          <button class="btn btn-outline btn-sm" onclick="downloadSampleCsv()">⬇ Tải CSV Mẫu</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions" id="p1Actions" style="display:none">
+      <button class="btn btn-outline" onclick="resetAll()">← Chọn lại dữ liệu khác</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="showStage(2)">Tiếp tục: Sang Chặng 2 (Kiểm tra &amp; Làm sạch) →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHẶNG 2: KIỂM TRA & LÀM SẠCH ═══ -->
+  <section class="panel" id="p2">
+    <div class="panel-head">
+      <div>
+        <span class="chip">CHẶNG 2 / 5 · BƯỚC 2, 3 &amp; 4</span>
+        <h2>Kiểm tra &amp; Làm sạch dữ liệu (Profiling &amp; Cleaning)</h2>
+        <p>Phát hiện khuyết dữ kiện, chuẩn hóa định dạng và so sánh dữ liệu trước – sau khi áp dụng quy tắc trước khi chuyển cho AI Agent.</p>
+      </div>
+    </div>
+
+    <div class="kpi-grid" id="cleanKpi"></div>
+    <div id="cleanAlert"></div>
+
+    <div class="clean-grid">
+      <div class="card">
+        <h3>🧹 5 Quy tắc làm sạch &amp; chuẩn hóa</h3>
+        <p style="font-size:.77rem;color:var(--t3);margin-bottom:10px">Bấm vào dòng quy tắc để xem các mã cơ hội bị ảnh hưởng.</p>
+        <div id="optList"></div>
+        <button class="btn btn-blue btn-sm" style="margin-top:14px;width:100%;justify-content:center" onclick="reClean()">↻ Chạy lại quy tắc làm sạch</button>
+      </div>
+
+      <div class="card">
+        <h3>📊 So sánh &amp; Xem trước dữ liệu sau làm sạch</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Mã Đơn</th><th>Khách Hàng</th><th>Hạng mục sản phẩm</th><th style="text-align:right">Ngân Sách</th><th style="text-align:center">Hạn Giao</th><th style="text-align:center">CK đề nghị</th><th>Trạng thái dữ liệu</th>
+              </tr>
+            </thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CƠ SỞ DỮ LIỆU NGHIỆP VỤ THAM CHIẾU ĐỐI CHIẾU TỪ CHẶNG 2 -->
+    <div class="ref-grid">
+      <div class="card" style="margin-bottom:0">
+        <h3>📦 Danh mục 7 Sản phẩm &amp; Tồn kho thực tế (SP01–SP07)</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Mã</th><th>Tên thiết bị / Dịch vụ</th><th style="text-align:right">Giá niêm yết</th><th style="text-align:center">Tồn kho</th><th style="text-align:center">Nhập hàng</th></tr>
+            </thead>
+            <tbody id="catalogTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:0">
+        <h3>⚖️ Chính sách Chiết khấu &amp; Đội ngũ NVKD</h3>
+        <div id="discountPolicyList"></div>
+        <div style="background:var(--accent-light);border:1px solid var(--border-strong);border-radius:8px;padding:9px 12px;font-size:.78rem;color:var(--accent-deep);font-weight:700;margin-bottom:12px">
+          👑 Trần tối đa công ty: ≤ 15% (Do TPKD Trường Giang duyệt) • Dung sai ngân sách: ≤ 5%
+        </div>
+        <div style="font-size:.78rem;font-weight:700;color:var(--t2)">Đội ngũ 6 Nhân viên Kinh doanh phân bổ tự động:</div>
+        <div class="rep-grid" id="salesRepGrid"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-outline" onclick="back(1)">← Quay lại: Nhập dữ liệu khác</button>
+      <div class="right">
+        <button class="btn btn-primary" onclick="showStage(3)">Dữ liệu đã ổn, sang Chặng 3: Xử lý AI Agent →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHẶNG 3: XỬ LÝ & THẨM ĐỊNH AI AGENT ═══ -->
+  <section class="panel" id="p3">
+    <div class="panel-head">
+      <div>
+        <span class="chip">CHẶNG 3 / 5 · BƯỚC 6</span>
+        <h2>Xử lý &amp; Thẩm định Đa Kỹ Năng (AI Sales Agent)</h2>
+        <p>AI Agent phối hợp 4 công cụ nghiệp vụ độc lập để thẩm định toàn diện từng cơ hội bán hàng và ghi nhật ký truy vết (Audit Trail).</p>
+      </div>
+    </div>
+
+    <div id="procAlert"></div>
+    <div class="card">
+      <h3>⚙️ Pipeline thực thi kỹ năng của SalesOpportunityAgent</h3>
+      <div class="proc-list" id="procList"></div>
+    </div>
+
+    <div class="card" id="procPreviewCard" style="display:none">
+      <h3>🔎 Kết quả thẩm định sơ bộ từ AI Agent</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Mã Đơn</th><th>Khách Hàng</th><th>NVKD Phụ trách</th><th>Phân loại của Agent</th><th style="text-align:right">Giá trị đề xuất</th><th>Bước tiếp theo</th></tr>
+          </thead>
+          <tbody id="procPreviewBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-outline" onclick="back(2)">← Quay lại: Sửa quy tắc làm sạch</button>
+      <div class="right">
+        <button class="btn btn-primary" id="btnProcess" onclick="runProcess()">▶ Bắt đầu chạy AI Agent</button>
+        <button class="btn btn-primary" id="btnToConfirm" style="display:none" onclick="showStage(4)">Sang Chặng 4: Người dùng xác nhận →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHẶNG 4: XÁC NHẬN KẾT QUẢ (HUMAN-IN-THE-LOOP) ═══ -->
+  <section class="panel" id="p4">
+    <div class="panel-head">
+      <div>
+        <span class="chip">CHẶNG 4 / 5 · BƯỚC 5 (CHỐT CHẶN CON NGƯỜI)</span>
+        <h2>Xác nhận kết quả thẩm định (Human-in-the-loop Checkpoint)</h2>
+        <p>Hình thoi quyết định trong quy trình: Người dùng kiểm tra đối soát số liệu. Nếu chưa đạt, phản hồi yêu cầu để quay lại bước làm sạch.</p>
+      </div>
+    </div>
+
+    <div class="decision-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-weight:800;font-size:1rem;color:var(--accent-deep)">💎 Decision Diamond — Bước 5: Người dùng xác nhận kết quả?</div>
+          <div style="font-size:.84rem;color:var(--t2);margin-top:4px">
+            Nguyên tắc bảo vệ doanh nghiệp: Agent <b>không tự xác nhận bán hàng</b> khi thiếu dữ kiện hoặc vượt quyền hạn.
+          </div>
+        </div>
+        <span class="badge b" id="reconBadge">ĐỐI SOÁT KHỚP 100%</span>
+      </div>
+    </div>
+
+    <div class="kpi-grid" id="confirmKpi"></div>
+
+    <div class="card">
+      <h3>📊 Bảng đối soát phân loại 4 nhóm cơ hội</h3>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr><th>Mã Cơ Hội</th><th>Doanh Nghiệp</th><th>NVKD</th><th style="text-align:right">Giá Đề Xuất</th><th style="text-align:center">CK áp dụng</th><th>Trạng Thái</th><th>Căn Cứ Nghiệp Vụ</th></tr>
+          </thead>
+          <tbody id="confirmTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="background:var(--accent-soft)">
+      <h3>💬 Phản hồi điều chỉnh (Nếu chọn "Không" xác nhận)</h3>
+      <input type="text" id="feedbackNote" class="input-text" placeholder="Ví dụ: Yêu cầu kiểm tra lại định dạng cột ngân sách hoặc sửa quy tắc lọc..." style="margin-bottom:6px">
+      <div style="font-size:.76rem;color:var(--t3)">Nếu phát hiện sai sót, bấm <b>"Không xác nhận, quay lại làm sạch"</b> ở góc trái bên dưới để đưa luồng quay về Chặng 2.</div>
+    </div>
+
+    <label class="confirm-box">
+      <input type="checkbox" id="chkConfirm" onchange="updConfirmBtn()">
+      <span><b>Xác nhận ("Có"):</b> Tôi đã kiểm tra đối soát kết quả trên, đồng ý để Trưởng phòng <b>Trường Giang</b> &amp; hệ thống xuất Báo cáo HTML chính thức.</span>
+    </label>
+
+    <div class="actions">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-outline" onclick="sendFeedbackBack()">↩ Không xác nhận, quay lại làm sạch (Chặng 2)</button>
+        <button class="btn btn-outline" onclick="back(1)">← Chọn file khác</button>
+      </div>
+      <div class="right">
+        <button class="btn btn-primary" id="btnConfirm" disabled onclick="showStage(5)">🌸 Xác nhận &amp; Xuất Báo Cáo HTML (Chặng 5) →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CHẶNG 5: BÁO CÁO & DASHBOARD & XUẤT HTML ═══ -->
+  <section class="panel" id="p5">
+    <div class="panel-head">
+      <div>
+        <span class="chip" style="background:var(--accent-light);color:var(--accent-deep)">CHẶNG 5 / 5 · BƯỚC 7, 8 &amp; HOÀN TẤT</span>
+        <h2>Báo cáo Phân Tích &amp; Xuất HTML Trực Tiếp</h2>
+        <p>Báo cáo quản trị hoàn chỉnh dành cho <b>Trường Giang</b>: Biểu đồ trực quan, chi tiết từng hồ sơ, phiếu duyệt và bản HTML xem/in trực tiếp.</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="resetAll()">＋ Phân tích bộ mới</button>
+        <button class="btn btn-outline btn-sm" onclick="downloadFilteredCsv()">⬇ Tải CSV Tổng Hợp</button>
+        <button class="btn btn-outline btn-sm" onclick="printReport()">🖨️ In / Lưu PDF</button>
+        <button class="btn btn-primary btn-sm" onclick="downloadHtmlReport()">⬇ Tải File HTML Báo Cáo</button>
+      </div>
+    </div>
+
+    <!-- KPI 4 NHÓM -->
+    <div class="kpi-grid" id="reportKpi"></div>
+
+    <!-- PIPELINE BANNER -->
+    <div class="pipeline-banner">
+      <div class="pipeline-info">
+        <h3>💎 Tổng Giá Trị Doanh Số Tiềm Năng (Có Thể Tiếp Tục + Chờ Duyệt)</h3>
+        <p id="pipelineSubtitle">Tính riêng biệt các cơ hội đủ điều kiện cung ứng &amp; an toàn biên lợi nhuận.</p>
+      </div>
+      <div class="pipeline-amount" id="pipelineTotalVal">676.863.000 VNĐ</div>
+    </div>
+
+    <!-- CHARTS -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+      <div class="card" style="margin-bottom:0">
+        <h3>🍩 Phân Bổ Cơ Hội Theo 4 Trạng Thái</h3>
+        <div style="height:250px;position:relative"><canvas id="statusChart"></canvas></div>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <h3>📊 Cơ Cấu Doanh Số Các Cơ Hội Khả Thi / Chờ Duyệt</h3>
+        <div style="height:250px;position:relative"><canvas id="valueChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- SUB-TABS -->
+    <div class="subtabs">
+      <button class="stab active" onclick="switchReportTab(0,this)">🌸 Báo Cáo HTML Trực Tiếp (Bước 8)</button>
+      <button class="stab" onclick="switchReportTab(1,this)">📋 Danh Sách &amp; Lọc Cơ Hội</button>
+      <button class="stab" onclick="switchReportTab(2,this)">📑 Hồ Sơ Chi Tiết &amp; Email Nháp</button>
+      <button class="stab" onclick="switchReportTab(3,this)">⚖️ Phiếu Trình Duyệt (TPKD)</button>
+      <button class="stab" onclick="switchReportTab(4,this)">🕵️ Nhật Ký Truy Vết (Audit Log)</button>
+    </div>
+
+    <!-- TAB 0: BÁO CÁO HTML TRỰC TIẾP -->
+    <div class="tab-pane active" id="rtab0">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <h3>🌐 Bản Báo Cáo HTML Quản Trị Hiển Thị Trực Tiếp Trên Giao Diện</h3>
+          <span class="badge b">🌸 Ký duyệt điện tử bởi Trường Giang</span>
+        </div>
+        <p style="font-size:0.84rem;color:var(--t3);margin-top:4px">
+          Dữ liệu sau khi qua làm sạch (Chặng 2) và người dùng xác nhận (Chặng 4) được xuất tự động thành báo cáo HTML5 độc lập ngay bên dưới.
+        </p>
+        <iframe class="html-preview-frame" id="reportFrame" src="about:blank"></iframe>
+      </div>
+    </div>
+
+    <!-- TAB 1: BẢNG TỔNG HỢP & LỌC -->
+    <div class="tab-pane" id="rtab1">
+      <div class="card">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+          <select id="repFilter" class="input-text" style="max-width:240px" onchange="renderMasterReportTable()">
+            <option value="ALL">Lọc: Tất cả 4 nhóm trạng thái</option>
+            <option value="CÓ THỂ TIẾP TỤC">CÓ THỂ TIẾP TỤC</option>
+            <option value="CHỜ DUYỆT">CHỜ DUYỆT</option>
+            <option value="CẦN BỔ SUNG THÔNG TIN">CẦN BỔ SUNG THÔNG TIN</option>
+            <option value="CHƯA ĐÁP ỨNG">CHƯA ĐÁP ỨNG</option>
+          </select>
+          <input type="text" id="repSearch" class="input-text" style="flex:1;min-width:220px" placeholder="🔍 Tìm theo mã cơ hội hoặc tên doanh nghiệp..." oninput="renderMasterReportTable()">
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>Mã Đơn</th><th>Doanh Nghiệp</th><th>NVKD</th><th style="text-align:right">Ngân sách</th><th style="text-align:right">Giá đề xuất</th><th style="text-align:center">CK</th><th>Trạng thái</th><th>Bước tiếp theo</th></tr>
+            </thead>
+            <tbody id="masterReportBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: CHI TIẾT HỒ SƠ & EMAIL NHÁP -->
+    <div class="tab-pane" id="rtab2">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          <label style="font-weight:700;color:var(--accent-deep)">Chọn hồ sơ cơ hội:</label>
+          <select id="dossierSelect" class="input-text" style="max-width:360px" onchange="renderSingleDossier()"></select>
+        </div>
+        <div class="dossier-grid" id="dossierDetailArea"></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: PHIẾU TRÌNH DUYỆT -->
+    <div class="tab-pane" id="rtab3">
+      <div class="card">
+        <h3>⚖️ Phiếu Trình Duyệt Vượt Thẩm Quyền (Trưởng Phòng Trường Giang)</h3>
+        <div id="approvalTicketsArea"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: AUDIT LOG -->
+    <div class="tab-pane" id="rtab4">
+      <div class="card">
+        <h3>🕵️ Nhật Ký Truy Vết Thực Thi AI Agent (Audit &amp; Rule Trace)</h3>
+        <div id="auditLogArea"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    🌸 Trường Giang — AI Data Analytics Agent B2B • Pink Blossom Luxury Edition
+  </div>
+</div>
+
+<script>
+// 1. CSDL SẢN PHẨM, CHIẾT KHẤU & ĐỘI NGŨ (ĐỒNG BỘ 100% VỚI config.py)
+const PRODUCT_CATALOG = {
+  SP01: {name:"Máy chủ Server Dell PowerEdge R750", unit:"Hệ thống", price:95000000, stock:8, restock:14},
+  SP02: {name:"Switch Cisco Catalyst 24 Port C9200L-24T-4G", unit:"Chiếc", price:28000000, stock:15, restock:7},
+  SP03: {name:"Laptop Doanh nghiệp Dell Latitude 5540", unit:"Chiếc", price:26500000, stock:25, restock:5},
+  SP04: {name:"Màn hình Dell UltraSharp 27 inch U2724D", unit:"Chiếc", price:9200000, stock:40, restock:3},
+  SP05: {name:"Tường lửa Firewall Fortinet FortiGate 60F", unit:"Thiết bị", price:18500000, stock:12, restock:10},
+  SP06: {name:"Dịch vụ Cài đặt & Triển khai Hệ thống Onsite", unit:"Gói", price:15000000, stock:999, restock:1},
+  SP07: {name:"Dịch vụ Bảo trì & Hỗ trợ Kỹ thuật 24/7 (1 Năm)", unit:"Gói/Năm", price:24000000, stock:999, restock:1}
+};
+
+const DISCOUNT_TIERS = [
+  {min:0, max:50000000, std:0, repMax:3, desc:"Đơn nhỏ (< 50 Tr): Chuẩn 0%, NVKD tối đa 3%"},
+  {min:50000000, max:150000000, std:3, repMax:5, desc:"Đơn vừa (50–150 Tr): Chuẩn 3%, NVKD tối đa 5%"},
+  {min:150000000, max:300000000, std:5, repMax:8, desc:"Đơn lớn (150–300 Tr): Chuẩn 5%, NVKD tối đa 8%"},
+  {min:300000000, max:Infinity, std:8, repMax:10, desc:"Đơn trọng điểm (> 300 Tr): Chuẩn 8%, NVKD tối đa 10%"}
+];
+
+const SALES_REPS = [
+  {id:"NV01", name:"Nguyễn Văn An", email:"an.nguyen@truonggiang.vn", phone:"0912.345.671"},
+  {id:"NV02", name:"Trần Thị Bình", email:"binh.tran@truonggiang.vn", phone:"0912.345.672"},
+  {id:"NV03", name:"Lê Hoàng Cường", email:"cuong.le@truonggiang.vn", phone:"0912.345.673"},
+  {id:"NV04", name:"Phạm Thị Dung", email:"dung.pham@truonggiang.vn", phone:"0912.345.674"},
+  {id:"NV05", name:"Vũ Minh Đức", email:"duc.vu@truonggiang.vn", phone:"0912.345.675"},
+  {id:"NV06", name:"Đỗ Thu Hà", email:"ha.do@truonggiang.vn", phone:"0912.345.676"}
+];
+
+const MANAGER_NAME = "Trường Giang";
+const MANAGER_MAX_DISCOUNT = 15.0;
+const BUDGET_TOLERANCE_PCT = 5.0;
+
+// 2. BỘ 10 KỊCH BẢN MẪU CHUẨN TỪ data_loader.py
+const SAMPLE_ROWS = [
+  {id:"REQ-001", customer:"Công ty Cổ phần Công nghệ EcoTech", contact:"tuan.le@ecotech.vn", itemsStr:"SP02: 2, SP04: 5", budget:120000000, days:5, disc:3, note:"Trường hợp thông thường (Đủ dữ liệu, kho sẵn, trong ngân sách)"},
+  {id:"REQ-002", customer:"Tập đoàn Xây dựng An Thịnh", contact:"kinhdoanh@anthinhgroup.vn", itemsStr:"SP01: 1, SP06: 1", budget:null, days:15, disc:0, note:"Thiếu dữ liệu: Khách không cung cấp ngân sách"},
+  {id:"REQ-003", customer:"Bệnh viện Đa khoa Quốc tế Trí Đức", contact:"it@triduchospital.com", itemsStr:"SP03: 10, SP05: 2", budget:350000000, days:null, disc:5, note:"Thiếu dữ liệu: Khách không nêu thời hạn giao hàng"},
+  {id:"REQ-004", customer:"Trường Quốc tế Horizon Academy", contact:"procurement@horizon.edu.vn", itemsStr:"SP04: 0, SP03: 5", budget:150000000, days:7, disc:0, note:"Thiếu dữ liệu: Số lượng sản phẩm không hợp lệ (=0)"},
+  {id:"REQ-005", customer:"Ngân hàng Thương mại Á Châu SmartBank", contact:"tech.buying@smartbank.com.vn", itemsStr:"SP01: 2, SP02: 4, SP06: 2", budget:320000000, days:10, disc:12, note:"Vượt thẩm quyền: Khách đòi chiết khấu 12% (Trình TPKD duyệt)"},
+  {id:"REQ-006", customer:"Công ty Logistics Vận tải Biển Đông", contact:"dieuhanh@biendonglogistics.vn", itemsStr:"SP03: 4, SP04: 4", budget:135000000, days:6, disc:4, note:"Ranh giới ngân sách: Hụt nhẹ <= 5% (Trình TPKD hỗ trợ giá)"},
+  {id:"REQ-007", customer:"Công ty Cổ phần Chứng khoán Thăng Long", contact:"system@thanglongsec.com.vn", itemsStr:"SP01: 15, SP05: 1", budget:1500000000, days:2, disc:8, note:"Không khả thi tồn kho & tiến độ: Giao 2 ngày nhưng cần nhập 14 ngày"},
+  {id:"REQ-008", customer:"Công ty Truyền thông MediaStar", contact:"contact@mediastar.vn", itemsStr:"SP03: 6, SP04: 6", budget:250000000, days:10, disc:25, note:"Vượt trần chính sách: Đòi chiết khấu 25% (> 15% TPKD)"},
+  {id:"REQ-009", customer:"Chuỗi Khách sạn Grand Palace", contact:"admin@grandpalace.vn", itemsStr:"SP01: 1, SP02: 2, SP05: 2", budget:80000000, days:15, disc:5, note:"Không khả thi ngân sách: Ngân sách chỉ bằng 45% giá giải pháp"},
+  {id:"REQ-010", customer:"Công ty Phần mềm Sáng Tạo FinTech Việt", contact:"ceo@fintechviet.io", itemsStr:"SP03: 5, SP07: 1", budget:160000000, days:7, disc:5, note:"Ranh giới quy tắc: Đơn > 150M, chiết khấu 5% khớp quyền NVKD"}
+];
+
+const CLEAN_RULES = [
+  {key:"r_prod", label:"Chuẩn hóa mã sản phẩm (SP01–SP07) & viết hoa", defaultOn:true},
+  {key:"r_budget", label:"Làm sạch ký tự đơn vị tiền tệ trong Ngân sách (VNĐ, dấu phẩy/chấm)", defaultOn:true},
+  {key:"r_qty", label:"Phát hiện số lượng thiết bị không hợp lệ (<= 0 hoặc rỗng)", defaultOn:true},
+  {key:"r_multi", label:"Tách danh mục nhiều sản phẩm (Multi-item bundles)", defaultOn:true},
+  {key:"r_missing", label:"Gắn cờ tự động các cơ hội khuyết Ngân sách hoặc Thời hạn giao", defaultOn:true}
+];
+
+let rawRequests = [];
+let ruleState = {r_prod:true, r_budget:true, r_qty:true, r_multi:true, r_missing:true};
+let evaluatedDossiers = [];
+let approvalDecisions = {};
+let curStage = 1, maxStage = 1;
+let showFlowMap = true;
+let chart1 = null, chart2 = null;
+
+const $ = id => document.getElementById(id);
+const fmtVnd = n => (n !== null && n !== undefined && !isNaN(n) && n > 0) ? new Intl.NumberFormat('vi-VN').format(Math.round(n)) + ' VNĐ' : '—';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// RENDER CSDL THAM CHIẾU Ở CHẶNG 1
+function initReferenceCards(){
+  $('catalogTableBody').innerHTML = Object.entries(PRODUCT_CATALOG).map(([code, p])=>`
+    <tr>
+      <td><span class="badge b">${code}</span></td>
+      <td style="white-space:normal;min-width:190px"><b>${p.name}</b></td>
+      <td class="amt" style="font-weight:700;color:var(--accent-deep)">${fmtVnd(p.price)}</td>
+      <td style="text-align:center"><span class="badge ${p.stock>10?'g':'o'}">${p.stock} ${p.unit}</span></td>
+      <td style="text-align:center">${p.restock} ngày</td>
+    </tr>
+  `).join('');
+
+  $('discountPolicyList').innerHTML = DISCOUNT_TIERS.map(t=>`
+    <div class="tier-item">
+      <span>${t.desc}</span>
+      <span class="badge b">${t.repMax}% max</span>
+    </div>
+  `).join('');
+
+  $('salesRepGrid').innerHTML = SALES_REPS.map(r=>`
+    <div class="rep-chip">
+      <span class="rep-id">${r.id}</span>
+      <div><b>${r.name}</b><div style="font-size:.68rem;color:var(--t3)">${r.phone}</div></div>
+    </div>
+  `).join('');
+}
+
+// 8-STEP FLOW MAP + 5-STAGE STEPPER
+const FLOW_8_STEPS = [
+  {icon:"📥", title:"1. Tải dữ liệu", stage:1},
+  {icon:"🔍", title:"2. Data Profiling", stage:2},
+  {icon:"🧹", title:"3. Làm sạch", stage:2},
+  {icon:"📊", title:"4. So sánh KQ", stage:2},
+  {icon:"💎", title:"5. Xác nhận?", stage:4},
+  {icon:"⚙️", title:"6. Phân tích AI", stage:3},
+  {icon:"📈", title:"7. Tổng hợp", stage:5},
+  {icon:"🌐", title:"8. Xuất HTML", stage:5}
+];
+
+const STAGES = [
+  ['Nhập dữ liệu', 'File / Sheet / Mẫu'],
+  ['Làm sạch', 'Profiling & Clean'],
+  ['Xử lý AI Agent', '4 Kỹ năng nghiệp vụ'],
+  ['Xác nhận', 'Human-in-the-loop'],
+  ['Báo cáo & HTML', 'Dashboard & Xuất HTML']
+];
+
+function renderFlowMap(){
+  const activeMap = {1:1, 2:3, 3:6, 4:5, 5:8}[curStage] || 1;
+  $('flowStatusBadge').textContent = `Đang ở Chặng ${curStage} / 5`;
+  $('flowNodes').innerHTML = FLOW_8_STEPS.map((st, idx) => {
+    const stepNum = idx + 1;
+    let cls = '';
+    if((curStage===1 && stepNum===1) || (curStage===2 && stepNum>=2 && stepNum<=4) || (curStage===3 && stepNum===6) || (curStage===4 && stepNum===5) || (curStage===5 && stepNum>=7)){
+      cls = 'cur';
+    } else if(st.stage < curStage){
+      cls = 'passed';
+    }
+    return `<div class="f-node ${cls}"><span class="fi">${st.icon}</span><div class="ft">${st.title}</div></div>`;
+  }).join('');
+}
+
+function toggleFlowMap(){
+  showFlowMap = !showFlowMap;
+  $('flowMap').style.display = showFlowMap ? 'block' : 'none';
+}
+
+function renderStepper(){
+  $('stepper').innerHTML = STAGES.map((s,i)=>{
+    const n = i+1;
+    const c = n === curStage ? 'active' : (n < curStage || n < maxStage ? 'done' : 'pending');
+    return `<div class="st ${c}" onclick="stepClick(${n})">
+      <div class="st-dot">${c==='done'?'✓':n}</div>
+      <div class="st-label">${s[0]}</div>
+      <div class="st-sub">${s[1]}</div>
+    </div>`;
+  }).join('');
+  renderFlowMap();
+}
+
+function showStage(n){
+  curStage = n;
+  if(n > maxStage) maxStage = n;
+  for(let i=1; i<=5; i++) $('p'+i).classList.toggle('visible', i === n);
+  renderStepper();
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  if(n === 2) renderCleaningStage();
+  if(n === 3) resetProcessUI();
+  if(n === 4) renderConfirmStage();
+  if(n === 5) renderReportStage();
+}
+
+function stepClick(n){
+  if(n === curStage) return;
+  if(n <= maxStage) showStage(n);
+}
+
+function back(n){
+  showStage(n);
+}
+
+// CHẶNG 1: PARSING & DATA INTAKE
+function parseItemsString(itemsStr){
+  const items = [];
+  if(!itemsStr) return items;
+  const parts = String(itemsStr).split(/[,;\n]+/);
+  for(let p of parts){
+    p = p.trim();
+    if(!p) continue;
+    const m = p.match(/(SP\d{2})\s*[:\-x*]?\s*(-?\d+)/i);
+    if(m){
+      items.push({product_id: m[1].toUpperCase(), quantity: parseInt(m[2], 10)});
+    }
+  }
+  return items;
+}
+
+function normalizeRowObj(obj, idx){
+  const cleanKey = k => String(k || '').replace(/^\ufeff/, '').trim().toLowerCase();
+  const keys = Object.keys(obj);
+  const findVal = patterns => {
+    for(const k of keys){
+      const kl = cleanKey(k);
+      if(patterns.some(pt => kl.includes(pt))) return obj[k];
+    }
+    return undefined;
+  };
+  const id = findVal(['mã yêu cầu','ma yeu cau','ma_yeu_cau','request_id','id','opportunity','mã']) || `REQ-${String(idx+1).padStart(3,'0')}`;
+  const customer = findVal(['khách hàng','khach hang','customer','tên công ty','ten cong ty','doanh nghiệp','tên']) || `Khách hàng #${idx+1}`;
+  const contact = findVal(['liên hệ','lien he','contact','email','sđt','sdt','phone']) || '';
+  const itemsRaw = findVal(['hạng mục','hang muc','sản phẩm','san pham','items','product','mã sp','danh mục']) || '';
+  let budgetRaw = findVal(['ngân sách','ngan sach','budget','giá trị','gia tri']);
+  let budget = null;
+  if(budgetRaw !== undefined && budgetRaw !== null && String(budgetRaw).trim() !== ''){
+    const num = Number(String(budgetRaw).replace(/[^\d.]/g, ''));
+    if(!isNaN(num) && num > 0) budget = num;
+  }
+  let daysRaw = findVal(['thời hạn','thoi han','hạn giao','lead','days','tiến độ','ngày giao']);
+  let days = null;
+  if(daysRaw !== undefined && daysRaw !== null && String(daysRaw).trim() !== ''){
+    const dn = parseInt(parseFloat(String(daysRaw).replace(/[^\d.]/g, '')), 10);
+    if(!isNaN(dn) && dn > 0) days = dn;
+  }
+  let discRaw = findVal(['chiết khấu','chiet khau','discount','giảm giá']);
+  let disc = 0;
+  if(discRaw !== undefined && discRaw !== null && String(discRaw).trim() !== ''){
+    const dn = parseFloat(String(discRaw).replace(/[^\d.]/g, ''));
+    if(!isNaN(dn) && dn >= 0) disc = dn;
+  }
+  return {
+    id: String(id).trim(),
+    customer: String(customer).trim(),
+    contact: String(contact).trim(),
+    itemsStr: String(itemsRaw).trim(),
+    budget,
+    days,
+    disc,
+    note: findVal(['kịch bản','ghi chú','note']) || ''
+  };
+}
+
+function useDefaultData(){
+  rawRequests = SAMPLE_ROWS.map(r => ({...r}));
+  onIntakeSuccess('Du_Lieu_Mau_TruongGiang_10_Kich_Ban.xlsx');
+}
+
+function onIntakeSuccess(sourceName){
+  evaluatedDossiers = rawRequests.map((r, i) => evaluateOpportunity(r, i));
+  $('uploadTitle').textContent = `✓ Đã nạp thành công "${sourceName}"`;
+  $('p1Result').innerHTML = `<div class="alert ok">
+    <b>🌸 Đã tiếp nhận &amp; kiểm tra cấu trúc thành công (${rawRequests.length} cơ hội B2B)!</b>
+    Dữ liệu đã sẵn sàng chuyển sang <b>Chặng 2: Kiểm tra &amp; Làm sạch (Profiling &amp; Cleaning)</b>.
+  </div>`;
+  $('p1Actions').style.display = 'flex';
+  maxStage = 2;
+  renderStepper();
+}
+
+function showUploadError(msg){
+  $('p1Result').innerHTML = `<div class="alert err"><b>✗ Không thể mở file:</b> ${esc(msg)}</div>`;
+}
+
+function parseCsvText(text){
+  const cleanText = String(text || '').replace(/^\ufeff/, '');
+  const lines = cleanText.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if(lines.length < 2) return [];
+  const head = lines[0];
+  const delim = (head.split(';').length > head.split(',').length) ? ';'
+              : (head.split('\t').length > head.split(',').length) ? '\t' : ',';
+  const parseLine = line => {
+    const res = []; let cur = '', inQ = false;
+    for(let i=0;i<line.length;i++){
+      const ch = line[i];
+      if(ch === '"'){ inQ = !inQ; }
+      else if(ch === delim && !inQ){ res.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    res.push(cur.trim());
+    return res;
+  };
+  const headers = parseLine(lines[0]).map(h => h.replace(/^\ufeff/, '').trim());
+  const out = [];
+  for(let i=1;i<lines.length;i++){
+    const vals = parseLine(lines[i]);
+    if(!vals.length || vals.every(v => v === '')) continue;
+    const obj = {};
+    headers.forEach((h, idx) => obj[h || `col_${idx}`] = vals[idx] ?? '');
+    out.push(normalizeRowObj(obj, out.length));
+  }
+  return out;
+}
+
+const upBox = $('uploadBox');
+upBox.addEventListener('dragover', e => {e.preventDefault(); upBox.classList.add('drag');});
+upBox.addEventListener('dragleave', () => upBox.classList.remove('drag'));
+upBox.addEventListener('drop', e => {
+  e.preventDefault(); upBox.classList.remove('drag');
+  if(e.dataTransfer.files.length) handleFileUpload(e.dataTransfer.files[0]);
+});
+function pickFile(inp){ if(inp.files.length) handleFileUpload(inp.files[0]); inp.value = ''; }
+
+async function uploadViaServer(file){
+  if(!location.protocol.startsWith('http')) return null;
+  const b64 = await new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('Không đọc được byte dữ liệu file.'));
+    r.readAsDataURL(file);
+  });
+  const resp = await fetch('/api/upload', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({filename: file.name, data_base64: b64})
+  });
+  if(!resp.ok){
+    const errObj = await resp.json().catch(() => null);
+    if(errObj && errObj.error) throw new Error(errObj.error);
+    return null;
+  }
+  const data = await resp.json();
+  return (data && data.ok && Array.isArray(data.rows)) ? data.rows : null;
+}
+
+async function handleFileUpload(file){
+  const name = file.name.toLowerCase();
+  $('p1Result').innerHTML = '';
+  if(!name.endsWith('.csv') && !name.endsWith('.xlsx') && !name.endsWith('.xls')){
+    return showUploadError('Định dạng file chưa được hỗ trợ. Vui lòng chọn file .csv, .xlsx hoặc .xls');
+  }
+
+  let lastServerErr = null;
+  // Ưu tiên gọi backend server.py (pandas + openpyxl) nếu đang chạy http://localhost:8000
+  try{
+    const serverRows = await uploadViaServer(file);
+    if(serverRows && serverRows.length){
+      rawRequests = serverRows;
+      return onIntakeSuccess(file.name);
+    }
+  }catch(servErr){
+    lastServerErr = servErr.message;
+    console.warn('Server upload fallback:', servErr.message);
+  }
+
+  if(name.endsWith('.csv')){
+    const reader = new FileReader();
+    reader.onload = e => {
+      const parsed = parseCsvText(e.target.result);
+      if(!parsed.length) return showUploadError(lastServerErr || 'File CSV không có dòng dữ liệu hợp lệ (cần tối thiểu 1 dòng tiêu đề và 1 dòng dữ liệu).');
+      rawRequests = parsed;
+      onIntakeSuccess(file.name);
+    };
+    reader.onerror = () => showUploadError('Không đọc được nội dung file CSV.');
+    reader.readAsText(file, 'utf-8');
+  } else {
+    if(typeof XLSX === 'undefined'){
+      return showUploadError(lastServerErr || 'Trình duyệt chưa tải được thư viện đọc Excel offline. Hãy mở qua link http://localhost:8000 để server Python đọc trực tiếp file Excel.');
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      try{
+        const wb = XLSX.read(new Uint8Array(e.target.result), {type:'array'});
+        let jsonRows = [];
+        for(const sName of wb.SheetNames){
+          const ws = wb.Sheets[sName];
+          const rows = XLSX.utils.sheet_to_json(ws, {defval:null});
+          if(rows && rows.length){ jsonRows = rows; break; }
+        }
+        if(!jsonRows.length) return showUploadError('File Excel trống, không tìm thấy dòng dữ liệu nào.');
+        rawRequests = jsonRows.map((r, i) => normalizeRowObj(r, i));
+        onIntakeSuccess(file.name);
+      }catch(err){
+        showUploadError('Lỗi đọc file Excel: ' + err.message);
+      }
+    };
+    reader.onerror = () => showUploadError('Không đọc được byte của file Excel.');
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+async function loadGoogleSheetClient(){
+  const url = $('gsUrlInput').value.trim();
+  if(!url){ return alert('Vui lòng dán đường link Google Sheet!'); }
+  const m = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if(!m) return alert('Link Google Sheet không hợp lệ!');
+  const exportUrl = `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=csv`;
+  try{
+    const resp = await fetch(exportUrl);
+    if(!resp.ok) throw new Error('Không thể tải Google Sheet (kiểm tra quyền chia sẻ công khai).');
+    const csv = await resp.text();
+    const parsed = parseCsvText(csv);
+    if(!parsed.length) throw new Error('Sheet không có dữ liệu hợp lệ.');
+    rawRequests = parsed;
+    onIntakeSuccess('Google_Sheets_Live');
+  }catch(e){
+    $('p1Result').innerHTML = `<div class="alert err"><b>✗ Lỗi kết nối Google Sheet:</b> ${esc(e.message)} (Bạn có thể bấm "Nạp 10 Kịch Bản Mẫu" hoặc tải file CSV lên trực tiếp).</div>`;
+  }
+}
+
+function downloadSampleCsv(){
+  const header = "Mã yêu cầu,Tên khách hàng,Liên hệ,Hạng mục sản phẩm,Ngân sách (VNĐ),Thời hạn yêu cầu (Ngày),Chiết khấu đề nghị (%)\n";
+  const rows = SAMPLE_ROWS.map(r => `"${r.id}","${r.customer}","${r.contact}","${r.itemsStr}",${r.budget??""},${r.days??""},${r.disc}`).join("\n");
+  const blob = new Blob(["\ufeff"+header+rows], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'TruongGiang_Sample_Requests.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+function resetAll(){
+  rawRequests = []; evaluatedDossiers = []; approvalDecisions = {};
+  maxStage = 1;
+  $('p1Result').innerHTML = '';
+  $('uploadTitle').textContent = 'Kéo thả hoặc chọn file dữ liệu B2B';
+  $('p1Actions').style.display = 'none';
+  showStage(1);
+}
+
+// BỘ NÃO AI AGENT B2B (4 KỸ NĂNG NGHIỆP VỤ GIỐNG HỆT tools.py & agent.py)
+function evaluateOpportunity(req, idx){
+  const rep = SALES_REPS[idx % SALES_REPS.length];
+  const parsedItems = parseItemsString(req.itemsStr);
+  const logs = [];
+  const ts = new Date().toLocaleTimeString('vi-VN');
+
+  logs.push({step:"1. Tiếp nhận Yêu cầu", action:`Khởi tạo hồ sơ #${req.id}`, rule:"Quy trình To-Be Trường Giang", details:{id:req.id, customer:req.customer, rep:rep.name}});
+
+  // Kỹ năng 1: Thẩm định tính đầy đủ
+  const missing = [];
+  if(!req.customer || req.customer === 'Khách hàng chưa rõ') missing.push("Tên khách hàng");
+  if(!req.contact) missing.push("Thông tin liên hệ");
+  if(!parsedItems.length) missing.push("Danh mục sản phẩm");
+  const invalidQty = parsedItems.filter(it => it.quantity <= 0);
+  if(invalidQty.length) missing.push(`Số lượng không hợp lệ (${invalidQty.map(x=>`${x.product_id}: ${x.quantity}`).join(', ')})`);
+  if(!req.budget || req.budget <= 0) missing.push("Ngân sách dự kiến (VNĐ)");
+  if(!req.days || req.days <= 0) missing.push("Thời hạn triển khai (Ngày)");
+
+  const isComplete = missing.length === 0;
+  logs.push({step:"2. Kiểm tra tính đầy đủ (Skill 1)", action:`validate_request_completeness()`, rule:"Checklist thông tin bắt buộc", details:{isComplete, missing}});
+
+  if(!isComplete){
+    const email = `Chủ đề: [Trường Giang] Làm rõ thông tin yêu cầu báo giá #${req.id} - ${req.customer}\n\nKính gửi Quý khách hàng ${req.customer},\n\nCảm ơn Quý công ty đã quan tâm đến giải pháp thiết bị & dịch vụ công nghệ của Trường Giang.\nĐể lập báo giá chính xác và cam kết tiến độ triển khai, chúng tôi kính đề nghị Quý khách bổ sung các thông tin còn thiếu sau:\n${missing.map(m => `- ${m}`).join('\n')}\n\nSau khi nhận được phản hồi, chuyên viên ${rep.name} (${rep.phone}) sẽ phản hồi ngay trong ngày.\n\nTrân trọng,\n${MANAGER_NAME}`;
+    return {
+      ...req, parsedItems, rep, missing,
+      final_status: "CẦN BỔ SUNG THÔNG TIN",
+      eligible_value: 0,
+      inventory: null, pricing: null,
+      next_action: `NVKD ${rep.name} gửi email yêu cầu khách hàng bổ sung: ${missing.join(', ')}.`,
+      email_draft: email,
+      approval_ticket: null,
+      audit_logs: logs,
+      ts
+    };
+  }
+
+  // Kỹ năng 2: Thẩm định tồn kho & Lead-time
+  let allInStock = true, maxRestock = 0;
+  const itemAnalysis = parsedItems.map(it => {
+    const prod = PRODUCT_CATALOG[it.product_id];
+    if(!prod) return {...it, product_name:"Mã lạ", unit:"-", stock:0, inStock:false, shortage:it.quantity, restock:14};
+    const inStock = prod.stock >= it.quantity;
+    if(!inStock){
+      allInStock = false;
+      if(prod.restock > maxRestock) maxRestock = prod.restock;
+    }
+    return {
+      product_id: it.product_id, product_name: prod.name, unit: prod.unit,
+      qty: it.quantity, stock: prod.stock, inStock,
+      shortage: Math.max(0, it.quantity - prod.stock),
+      restock: prod.restock, price: prod.price
+    };
+  });
+  const feasibleDays = allInStock ? 2 : (maxRestock + 2);
+  const leadTimeOk = req.days >= feasibleDays;
+  const invVerdict = leadTimeOk
+    ? `ĐÁP ỨNG TIẾN ĐỘ: Khách cần ${req.days} ngày, hệ thống giao trong ${feasibleDays} ngày.`
+    : `KHÔNG ĐÁP ỨNG TIẾN ĐỘ: Khách yêu cầu ${req.days} ngày nhưng kho thiếu hàng, cần ${feasibleDays} ngày (${maxRestock} ngày nhập + 2 ngày lắp đặt).`;
+  logs.push({step:"3. Thẩm định Kho & Lead-time (Skill 2)", action:`check_inventory_and_leadtime()`, rule:"Chính sách tồn kho khả dụng & Lead-time (Mặc định có sẵn = 2 ngày)", details:{allInStock, feasibleDays, requestedDays:req.days, leadTimeOk}});
+
+  // Kỹ năng 3: Tính giá & Chiết khấu theo chính sách
+  const listPrice = itemAnalysis.reduce((s, it) => s + (it.price || 0) * it.qty, 0);
+  const tier = DISCOUNT_TIERS.find(t => listPrice >= t.min && listPrice < t.max) || DISCOUNT_TIERS[0];
+  const reqDisc = req.disc || 0;
+  const appliedDisc = Math.min(Math.max(reqDisc, tier.std), MANAGER_MAX_DISCOUNT);
+  const finalPrice = listPrice * (1 - appliedDisc / 100);
+  const exceedsCeiling = reqDisc > MANAGER_MAX_DISCOUNT;
+  const needsDiscApproval = (reqDisc > tier.repMax) && !exceedsCeiling;
+
+  const budgetDiff = req.budget - finalPrice; // >= 0 là đủ
+  const budgetShortPct = finalPrice > 0 && budgetDiff < 0 ? Math.abs(budgetDiff) / finalPrice * 100 : 0;
+  const budgetOk = budgetDiff >= 0;
+  const budgetBorderline = !budgetOk && budgetShortPct <= BUDGET_TOLERANCE_PCT;
+
+  logs.push({step:"4. Báo giá & Kiểm tra Ngân sách (Skill 3)", action:`calculate_pricing_and_discount()`, rule:tier.desc, details:{listPrice, appliedDisc, finalPrice, customerBudget:req.budget, budgetShortPct:budgetShortPct.toFixed(2)+'%'}});
+
+  // Phân định kết quả cuối cùng
+  let finalStatus = "CÓ THỂ TIẾP TỤC";
+  let nextAction = "";
+  let ticket = null;
+
+  if(!leadTimeOk || exceedsCeiling || (!budgetOk && !budgetBorderline)){
+    finalStatus = "CHƯA ĐÁP ỨNG";
+    const reasons = [];
+    if(!leadTimeOk) reasons.push(invVerdict);
+    if(exceedsCeiling) reasons.push(`Chiết khấu yêu cầu (${reqDisc}%) vượt trần công ty (${MANAGER_MAX_DISCOUNT}%).`);
+    if(!budgetOk && !budgetBorderline) reasons.push(`Ngân sách (${fmtVnd(req.budget)}) thấp hơn ${budgetShortPct.toFixed(1)}% so với giá trị giải pháp (${fmtVnd(finalPrice)}).`);
+    nextAction = reasons.join(" | ");
+  } else if(needsDiscApproval || budgetBorderline){
+    finalStatus = "CHỜ DUYỆT";
+    const reasonApp = needsDiscApproval
+      ? `Chiết khấu khách đề nghị (${reqDisc}%) vượt quyền NVKD (tối đa ${tier.repMax}%), nằm trong trần TPKD (<= 15%).`
+      : `Ngân sách khách hụt nhẹ ${budgetShortPct.toFixed(1)}% (<= dung sai ${BUDGET_TOLERANCE_PCT}%), đề xuất duyệt hỗ trợ giá.`;
+    nextAction = `Trình Trưởng phòng ${MANAGER_NAME} phê duyệt: ${reasonApp}`;
+    ticket = `PHIẾU TRÌNH DUYỆT VƯỢT THẨM QUYỀN — #${req.id}\n==================================================\nNgười trình: ${rep.name} (${rep.id})\nNgười phê duyệt: ${MANAGER_NAME} (Trưởng phòng Kinh doanh)\nKhách hàng: ${req.customer}\nLý do trình duyệt: ${reasonApp}\n\nChi tiết tài chính:\n- Tổng giá niêm yết: ${fmtVnd(listPrice)}\n- Chiết khấu áp dụng: ${appliedDisc}% (Trần NVKD: ${tier.repMax}%)\n- Giá đề xuất sau giảm: ${fmtVnd(finalPrice)}\n- Ngân sách khách hàng: ${fmtVnd(req.budget)}\n- Tiến độ đáp ứng: ${feasibleDays} ngày (Khách cần ${req.days} ngày)\n==================================================`;
+  } else {
+    finalStatus = "CÓ THỂ TIẾP TỤC";
+    nextAction = `NVKD ${rep.name} rà soát hồ sơ và gửi báo giá chính thức (${fmtVnd(finalPrice)}) cho khách hàng.`;
+  }
+
+  const eligibleVal = (finalStatus === "CÓ THỂ TIẾP TỤC" || finalStatus === "CHỜ DUYỆT") ? finalPrice : 0;
+
+  const emailDraft = finalStatus === "CHƯA ĐÁP ỨNG"
+    ? `Chủ đề: [Trường Giang] Phản hồi phương án kỹ thuật & báo giá #${req.id} - ${req.customer}\n\nKính gửi Quý khách ${req.customer},\n\nSau khi kiểm tra hệ thống kho và chính sách giá hiện hành, Trường Giang xin thông báo hiện chưa thể đáp ứng nguyên trạng yêu cầu của Quý khách vì lý do:\n${nextAction}\n\nChúng tôi xin đề xuất phương án điều chỉnh cấu hình hoặc chia làm 2 đợt giao hàng để tối ưu ngân sách và tiến độ.\n\nTrân trọng,\n${rep.name} - ${rep.phone}`
+    : `Chủ đề: [Trường Giang] Thư chào giá & Đề xuất giải pháp B2B #${req.id} - ${req.customer}\n\nKính gửi Quý khách hàng ${req.customer},\n\nTrường Giang trân trọng gửi đến Quý công ty đề xuất báo giá cho danh mục sản phẩm yêu cầu:\n${itemAnalysis.map(it => `- ${it.product_id} (${it.product_name}): ${it.qty} ${it.unit} x ${fmtVnd(it.price)}`).join('\n')}\n\n- Tổng giá niêm yết: ${fmtVnd(listPrice)}\n- Chiết khấu áp dụng: ${appliedDisc}%\n- TỔNG GIÁ TRỊ ĐỀ XUẤT: ${fmtVnd(finalPrice)}\n- Thời gian giao hàng cam kết: ${feasibleDays} ngày làm việc.\n${finalStatus==='CHỜ DUYỆT' ? '\n(Lưu ý: Đề xuất đang chờ Trưởng phòng Kinh doanh Trường Giang phê duyệt chính thức trong 2 giờ làm việc.)' : ''}\n\nTrân trọng,\n${rep.name} (${rep.email})`;
+
+  logs.push({step:"5. Quyết định & Soạn thảo (Skill 4)", action:`Phân loại: ${finalStatus}`, rule:"Bảo vệ biên lợi nhuận & không tự xác nhận bán hàng vượt quyền", details:{finalStatus, eligibleVal, nextAction}});
+
+  return {
+    ...req, parsedItems, rep, missing:[],
+    final_status: finalStatus,
+    eligible_value: eligibleVal,
+    inventory: {allInStock, feasibleDays, leadTimeOk, invVerdict, itemAnalysis},
+    pricing: {listPrice, stdDisc:tier.std, repMax:tier.repMax, appliedDisc, finalPrice, budgetShortPct},
+    next_action: nextAction,
+    email_draft: emailDraft,
+    approval_ticket: ticket,
+    audit_logs: logs,
+    ts
+  };
+}
+
+// CHẶNG 2: RENDER DATA PROFILING & CLEANING
+function renderCleaningStage(){
+  if(!rawRequests.length) useDefaultData();
+  const total = rawRequests.length;
+  const incompleteList = evaluatedDossiers.filter(d => d.missing && d.missing.length > 0);
+  const multiList = evaluatedDossiers.filter(d => d.parsedItems && d.parsedItems.length > 1);
+  const invalidQtyList = evaluatedDossiers.filter(d => d.parsedItems && d.parsedItems.some(it => it.quantity <= 0));
+  const completeCount = total - incompleteList.length;
+
+  $('cleanKpi').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Yêu cầu ban đầu</div><div class="kpi-val">${total}</div><div class="kpi-sub">Tiếp nhận thô từ file/sheet</div></div>
+    <div class="kpi"><div class="kpi-label">Dữ liệu hoàn chỉnh</div><div class="kpi-val" style="color:var(--green)">${completeCount}</div><div class="kpi-sub">${Math.round(completeCount/total*100)}% đủ thông tin bắt buộc</div></div>
+    <div class="kpi"><div class="kpi-label">Cần bổ sung / Lỗi</div><div class="kpi-val" style="color:var(--accent-deep)">${incompleteList.length}</div><div class="kpi-sub">Phát hiện thiếu ngân sách/hạn/SL</div></div>
+    <div class="kpi"><div class="kpi-label">Quy tắc kích hoạt</div><div class="kpi-val" style="color:var(--purple)">${Object.values(ruleState).filter(Boolean).length}/5</div><div class="kpi-sub">Đang áp dụng chuẩn hóa</div></div>
+  `;
+
+  $('cleanAlert').innerHTML = incompleteList.length
+    ? `<div class="alert info"><b>🌸 Phát hiện ${incompleteList.length} cơ hội thiếu thông tin bắt buộc:</b> Không tự ý xóa bỏ! Hệ thống giữ nguyên các dòng này và gắn cờ <code>CẦN BỔ SUNG THÔNG TIN</code> để gửi email hỏi lại khách hàng ở bước sau.</div>`
+    : `<div class="alert ok"><b>✓ Tuyệt vời!</b> Tất cả ${total} dòng dữ liệu đều đầy đủ thông tin bắt buộc.</div>`;
+
+  const countsByKey = {
+    r_prod: {cnt: total, list: rawRequests.map(r=>`${r.id}: ${r.itemsStr}`)},
+    r_budget: {cnt: rawRequests.filter(r=>r.budget).length, list: rawRequests.filter(r=>r.budget).map(r=>`${r.id}: ${fmtVnd(r.budget)}`)},
+    r_qty: {cnt: invalidQtyList.length, list: invalidQtyList.map(r=>`${r.id} (${r.customer})`)},
+    r_multi: {cnt: multiList.length, list: multiList.map(r=>`${r.id}: ${r.parsedItems.length} thiết bị`)},
+    r_missing: {cnt: incompleteList.length, list: incompleteList.map(r=>`${r.id}: Thiếu ${r.missing.join(', ')}`)}
+  };
+
+  $('optList').innerHTML = CLEAN_RULES.map(rule => {
+    const info = countsByKey[rule.key];
+    return `
+      <div>
+        <label class="opt" onclick="toggleRuleSample('${rule.key}')">
+          <input type="checkbox" ${ruleState[rule.key]?'checked':''} onclick="event.stopPropagation(); ruleState['${rule.key}']=this.checked">
+          <span>${rule.label}</span>
+          <span class="cnt ${info.cnt?'hit':''}">${info.cnt}</span>
+        </label>
+        <div class="rule-sample-box" id="rs_${rule.key}">
+          <b>Các dòng liên quan:</b> ${info.list.length ? info.list.slice(0,4).map(x=>esc(x)).join(' • ') : 'Không phát hiện lỗi'}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  $('previewBody').innerHTML = evaluatedDossiers.map(d => `
+    <tr>
+      <td style="font-weight:700;color:var(--accent-deep)">${esc(d.id)}</td>
+      <td><b>${esc(d.customer)}</b></td>
+      <td><code>${esc(d.itemsStr)}</code></td>
+      <td class="amt">${d.budget ? fmtVnd(d.budget) : '<span style="color:var(--red);font-weight:700">Thiếu</span>'}</td>
+      <td style="text-align:center">${d.days ? d.days + ' ngày' : '<span style="color:var(--red);font-weight:700">Thiếu</span>'}</td>
+      <td style="text-align:center"><span class="badge b">${d.disc}%</span></td>
+      <td><span class="badge ${d.missing.length?'o':'g'}">${d.missing.length?'Thiếu dữ kiện':'Hợp lệ ✓'}</span></td>
+    </tr>
+  `).join('');
+}
+
+function toggleRuleSample(key){
+  const el = $('rs_' + key);
+  if(el) el.classList.toggle('show');
+}
+
+function reClean(){
+  evaluatedDossiers = rawRequests.map((r, i) => evaluateOpportunity(r, i));
+  renderCleaningStage();
+}
+
+// CHẶNG 3: XỬ LÝ AI AGENT
+const PROC_STEPS = [
+  {title:"1. Kiểm tra tính đầy đủ & Phân công NVKD", tool:"validate_request_completeness()", desc:"Rà soát tên công ty, liên hệ, sản phẩm, số lượng (>0), ngân sách, thời hạn & gán NVKD (NV01–NV06)."},
+  {title:"2. Thẩm định Tồn kho & Lead-time thực tế", tool:"check_inventory_and_leadtime()", desc:"Tra cứu CSDL tồn kho khả dụng 7 sản phẩm (SP01–SP07), tính số ngày giao hàng khả thi."},
+  {title:"3. Áp Bảng giá & Chiết khấu 4 nấc", tool:"calculate_pricing_and_discount()", desc:"Tính tổng niêm yết, áp nấc chiết khấu chuẩn, đối chiếu dung sai ngân sách <= 5%."},
+  {title:"4. Phân định thẩm quyền & Soạn thảo hồ sơ", tool:"generate_customer_email() + approval_ticket", desc:"Tạo bản nháp email khách hàng & lập Phiếu trình duyệt TPKD Trường Giang khi vượt quyền."}
+];
+
+function resetProcessUI(){
+  $('procList').innerHTML = PROC_STEPS.map((p,i)=>`
+    <div class="proc" id="pr_${i}">
+      <div class="dot">${i+1}</div>
+      <div>
+        <div class="t">${p.title} <span class="tool-tag">${p.tool}</span></div>
+        <div class="d">${p.desc}</div>
+        <div class="r" id="prR_${i}"></div>
+      </div>
+    </div>
+  `).join('');
+  $('procAlert').innerHTML = '';
+  $('procPreviewCard').style.display = 'none';
+  $('btnProcess').style.display = '';
+  $('btnProcess').disabled = false;
+  $('btnProcess').textContent = '▶ Bắt đầu chạy AI Agent';
+  $('btnToConfirm').style.display = 'none';
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function runProcess(){
+  const btn = $('btnProcess');
+  btn.disabled = true; btn.textContent = '⚙️ Đang thực thi công cụ...';
+  evaluatedDossiers = rawRequests.map((r, i) => evaluateOpportunity(r, i));
+
+  for(let i=0; i<PROC_STEPS.length; i++){
+    const el = $('pr_' + i);
+    el.className = 'proc run';
+    await sleep(380);
+    el.className = 'proc done';
+    el.querySelector('.dot').textContent = '✓';
+    $('prR_' + i).textContent = `✓ Đã xử lý xong ${evaluatedDossiers.length} cơ hội và ghi nhận vào Audit Trail.`;
+  }
+
+  $('procPreviewBody').innerHTML = evaluatedDossiers.map(d => {
+    const badgeCls = d.final_status==='CÓ THỂ TIẾP TỤC'?'g':d.final_status==='CHỜ DUYỆT'?'o':d.final_status==='CẦN BỔ SUNG THÔNG TIN'?'b':'r';
+    const val = d.pricing ? fmtVnd(d.pricing.finalPrice) : '—';
+    return `<tr>
+      <td style="font-weight:700;color:var(--accent-deep)">${esc(d.id)}</td>
+      <td><b>${esc(d.customer)}</b></td>
+      <td>${esc(d.rep.name)} (${d.rep.id})</td>
+      <td><span class="badge ${badgeCls}">${d.final_status}</span></td>
+      <td class="amt" style="font-weight:700">${val}</td>
+      <td style="white-space:normal;min-width:220px;font-size:.78rem">${esc(d.next_action)}</td>
+    </tr>`;
+  }).join('');
+  $('procPreviewCard').style.display = 'block';
+  $('procAlert').innerHTML = `<div class="alert ok"><b>🌸 AI Agent đã xử lý xong toàn bộ ${evaluatedDossiers.length} cơ hội!</b> Bấm nút bên dưới để chuyển sang Chặng 4 kiểm tra &amp; xác nhận.</div>`;
+
+  btn.style.display = 'none';
+  $('btnToConfirm').style.display = 'inline-flex';
+  maxStage = 4;
+  renderStepper();
+}
+
+// CHẶNG 4: XÁC NHẬN KẾT QUẢ
+function renderConfirmStage(){
+  const c = getStatusCounts();
+  $('confirmKpi').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Có Thể Tiếp Tục</div><div class="kpi-val" style="color:var(--green)">${c.ready}</div><div class="kpi-sub">Đủ dữ kiện &amp; trong quyền NVKD</div></div>
+    <div class="kpi"><div class="kpi-label">Chờ Duyệt</div><div class="kpi-val" style="color:var(--amber)">${c.pending}</div><div class="kpi-sub">Trình TPKD ${MANAGER_NAME}</div></div>
+    <div class="kpi"><div class="kpi-label">Cần Bổ Sung TT</div><div class="kpi-val" style="color:var(--accent-deep)">${c.info}</div><div class="kpi-sub">Chặn chốt ảo khi thiếu dữ liệu</div></div>
+    <div class="kpi"><div class="kpi-label">Chưa Đáp Ứng</div><div class="kpi-val" style="color:var(--red)">${c.reject}</div><div class="kpi-sub">Vượt trần 15% hoặc hụt kho</div></div>
+  `;
+
+  $('confirmTableBody').innerHTML = evaluatedDossiers.map(d => {
+    const badgeCls = d.final_status==='CÓ THỂ TIẾP TỤC'?'g':d.final_status==='CHỜ DUYỆT'?'o':d.final_status==='CẦN BỔ SUNG THÔNG TIN'?'b':'r';
+    const val = d.pricing ? fmtVnd(d.pricing.finalPrice) : '—';
+    const disc = d.pricing ? `${d.pricing.appliedDisc}%` : '—';
+    return `<tr>
+      <td style="font-weight:700;color:var(--accent-deep)">${esc(d.id)}</td>
+      <td><b>${esc(d.customer)}</b></td>
+      <td>${esc(d.rep.name)}</td>
+      <td class="amt" style="font-weight:700">${val}</td>
+      <td style="text-align:center"><span class="badge b">${disc}</span></td>
+      <td><span class="badge ${badgeCls}">${d.final_status}</span></td>
+      <td style="white-space:normal;min-width:240px;font-size:.78rem;color:var(--t2)">${esc(d.next_action)}</td>
+    </tr>`;
+  }).join('');
+
+  $('chkConfirm').checked = false;
+  $('btnConfirm').disabled = true;
+}
+
+function updConfirmBtn(){
+  $('btnConfirm').disabled = !$('chkConfirm').checked;
+}
+
+function sendFeedbackBack(){
+  const fb = $('feedbackNote').value.trim();
+  if(fb){ alert(`Đã ghi nhận phản hồi "${fb}" — Hệ thống đưa quy trình quay lại Chặng 2 để làm sạch lại.`); }
+  showStage(2);
+}
+
+function getStatusCounts(){
+  const ready = evaluatedDossiers.filter(d=>d.final_status==='CÓ THỂ TIẾP TỤC').length;
+  const pending = evaluatedDossiers.filter(d=>d.final_status==='CHỜ DUYỆT').length;
+  const info = evaluatedDossiers.filter(d=>d.final_status==='CẦN BỔ SUNG THÔNG TIN').length;
+  const reject = evaluatedDossiers.filter(d=>d.final_status==='CHƯA ĐÁP ỨNG').length;
+  const totalEligibleVal = evaluatedDossiers.reduce((s,d)=>s+(d.eligible_value||0), 0);
+  return {ready, pending, info, reject, total:evaluatedDossiers.length, totalEligibleVal};
+}
+
+// CHẶNG 5: DASHBOARD, BIỂU ĐỒ & XUẤT HTML
+function renderReportStage(){
+  const c = getStatusCounts();
+  $('pipelineTotalVal').textContent = fmtVnd(c.totalEligibleVal);
+  $('pipelineSubtitle').textContent = `Tổng giá trị của ${c.ready + c.pending} cơ hội đủ điều kiện (Có thể tiếp tục + Chờ duyệt), loại trừ tuyệt đối các đơn thiếu dữ liệu hoặc vượt trần chính sách.`;
+
+  $('reportKpi').innerHTML = `
+    <div class="kpi"><div class="kpi-label">Có Thể Tiếp Tục</div><div class="kpi-val" style="color:var(--green)">${c.ready}</div><div class="kpi-sub">${Math.round(c.ready/c.total*100)}% tổng yêu cầu</div></div>
+    <div class="kpi"><div class="kpi-label">Chờ TPKD Duyệt</div><div class="kpi-val" style="color:var(--amber)">${c.pending}</div><div class="kpi-sub">${Math.round(c.pending/c.total*100)}% cần trình duyệt</div></div>
+    <div class="kpi"><div class="kpi-label">Cần Bổ Sung TT</div><div class="kpi-val" style="color:var(--accent-deep)">${c.info}</div><div class="kpi-sub">${Math.round(c.info/c.total*100)}% thiếu dữ kiện</div></div>
+    <div class="kpi"><div class="kpi-label">Chưa Đáp Ứng</div><div class="kpi-val" style="color:var(--red)">${c.reject}</div><div class="kpi-sub">${Math.round(c.reject/c.total*100)}% vượt trần / hụt kho</div></div>
+  `;
+
+  renderCharts(c);
+  renderHtmlIframe();
+  renderMasterReportTable();
+
+  $('dossierSelect').innerHTML = evaluatedDossiers.map(d => `<option value="${d.id}">${d.id} — ${d.customer} (${d.final_status})</option>`).join('');
+  renderSingleDossier();
+  renderApprovalTickets();
+  renderAuditLogs();
+}
+
+function renderCharts(c){
+  if(chart1) chart1.destroy();
+  if(chart2) chart2.destroy();
+
+  chart1 = new Chart($('statusChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: [`Có thể tiếp tục (${c.ready})`, `Chờ duyệt (${c.pending})`, `Cần bổ sung (${c.info})`, `Chưa đáp ứng (${c.reject})`],
+      datasets: [{
+        data: [c.ready, c.pending, c.info, c.reject],
+        backgroundColor: ['#16a34a', '#f59e0b', '#ec4899', '#e11d48'],
+        borderWidth: 3, borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, cutout:'58%',
+      plugins:{legend:{position:'bottom', labels:{usePointStyle:true, padding:12, font:{size:11, weight:'bold'}}}}
+    }
+  });
+
+  const elig = evaluatedDossiers.filter(d => d.eligible_value > 0);
+  chart2 = new Chart($('valueChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: elig.map(d => d.id),
+      datasets: [{
+        label: 'Giá trị đề xuất (VNĐ)',
+        data: elig.map(d => d.eligible_value),
+        backgroundColor: elig.map(d => d.final_status==='CÓ THỂ TIẾP TỤC' ? '#ec4899' : '#a855f7'),
+        borderRadius: 8, barPercentage: 0.55
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales: {
+        y:{ticks:{callback:v => (v/1e6).toFixed(0)+' Tr'}, grid:{color:'#fce7f3'}},
+        x:{grid:{display:false}}
+      },
+      plugins:{legend:{display:false}, tooltip:{callbacks:{label:ctx => ' ' + fmtVnd(ctx.raw)}}}
+    }
+  });
+}
+
+function switchReportTab(idx, btn){
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  $('rtab' + idx).classList.add('active');
+}
+
+function renderMasterReportTable(){
+  const flt = $('repFilter').value;
+  const kw = $('repSearch').value.trim().toLowerCase();
+  const rows = evaluatedDossiers.filter(d => {
+    if(flt !== 'ALL' && d.final_status !== flt) return false;
+    if(kw && !d.id.toLowerCase().includes(kw) && !d.customer.toLowerCase().includes(kw)) return false;
+    return true;
+  });
+
+  $('masterReportBody').innerHTML = rows.map(d => {
+    const badgeCls = d.final_status==='CÓ THỂ TIẾP TỤC'?'g':d.final_status==='CHỜ DUYỆT'?'o':d.final_status==='CẦN BỔ SUNG THÔNG TIN'?'b':'r';
+    return `<tr>
+      <td style="font-weight:700;color:var(--accent-deep)">${esc(d.id)}</td>
+      <td><b>${esc(d.customer)}</b></td>
+      <td>${esc(d.rep.name)}</td>
+      <td class="amt">${fmtVnd(d.budget)}</td>
+      <td class="amt" style="font-weight:700">${d.pricing?fmtVnd(d.pricing.finalPrice):'—'}</td>
+      <td style="text-align:center">${d.pricing?d.pricing.appliedDisc+'%':'—'}</td>
+      <td><span class="badge ${badgeCls}">${d.final_status}</span></td>
+      <td style="white-space:normal;min-width:210px;font-size:.78rem">${esc(d.next_action)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSingleDossier(){
+  const sel = $('dossierSelect').value;
+  const d = evaluatedDossiers.find(x => x.id === sel);
+  if(!d) return;
+  let invHtml = '<div class="alert warn">Chưa thẩm định tồn kho do thiếu dữ liệu đầu vào.</div>';
+  if(d.inventory){
+    invHtml = `<div style="margin-bottom:10px;font-size:.82rem"><b>Kết luận tiến độ:</b> ${esc(d.inventory.invVerdict)}</div>
+      <div class="tbl-wrap"><table><thead><tr><th>Mã</th><th>Sản phẩm</th><th style="text-align:center">Cần</th><th style="text-align:center">Tồn</th><th>Tình trạng</th></tr></thead><tbody>
+      ${d.inventory.itemAnalysis.map(it=>`<tr><td><span class="badge b">${it.product_id}</span></td><td style="white-space:normal">${esc(it.product_name)}</td><td style="text-align:center">${it.qty}</td><td style="text-align:center">${it.stock}</td><td><span class="badge ${it.inStock?'g':'r'}">${it.inStock?'Đủ hàng':'Thiếu '+it.shortage}</span></td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+  let priceHtml = '';
+  if(d.pricing){
+    priceHtml = `<div style="margin-top:12px;background:var(--accent-soft);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:.83rem;line-height:1.8">
+      <div>• Tổng giá niêm yết: <b>${fmtVnd(d.pricing.listPrice)}</b></div>
+      <div>• Chiết khấu áp dụng: <b>${d.pricing.appliedDisc}%</b> (Hạn mức NVKD: ${d.pricing.repMax}%)</div>
+      <div>• Giá đề xuất sau giảm: <b style="color:var(--accent-deep);font-size:.95rem">${fmtVnd(d.pricing.finalPrice)}</b></div>
+      <div>• Ngân sách khách hàng: <b>${fmtVnd(d.budget)}</b></div>
+    </div>`;
+  }
+  $('dossierDetailArea').innerHTML = `
+    <div>
+      <h4 style="color:var(--accent-deep);margin-bottom:8px">📌 Hồ sơ #${esc(d.id)} — ${esc(d.customer)}</h4>
+      <div style="font-size:.82rem;color:var(--t2);margin-bottom:12px">Phụ trách: <b>${esc(d.rep.name)}</b> (${esc(d.rep.phone)}) · Liên hệ: <code>${esc(d.contact)}</code></div>
+      ${invHtml}
+      ${priceHtml}
+    </div>
+    <div>
+      <h4 style="color:var(--accent-deep);margin-bottom:8px">✉️ Bản Nháp Email Phản Hồi Khách Hàng</h4>
+      <textarea class="email-box">${esc(d.email_draft)}</textarea>
+    </div>
+  `;
+}
+
+function renderApprovalTickets(){
+  const list = evaluatedDossiers.filter(d => d.approval_ticket);
+  if(!list.length){
+    $('approvalTicketsArea').innerHTML = `<div class="alert ok">✓ Không có cơ hội nào cần trình duyệt vượt quyền.</div>`;
+    return;
+  }
+  $('approvalTicketsArea').innerHTML = list.map(d => {
+    const dec = approvalDecisions[d.id];
+    return `<div class="ticket-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <b style="color:var(--accent-deep);font-size:.95rem">📝 Phiếu Trình Duyệt #${esc(d.id)} — ${esc(d.customer)}</b>
+        ${dec ? `<span class="badge ${dec==='ĐÃ DUYỆT'?'g':'r'}">${dec}</span>` : `<span class="badge o">ĐANG CHỜ KÝ</span>`}
+      </div>
+      <textarea class="email-box" style="min-height:190px;margin-bottom:12px" readonly>${esc(d.approval_ticket)}</textarea>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-primary btn-sm" onclick="decideTicket('${d.id}','ĐÃ DUYỆT')">✅ KÝ DUYỆT (APPROVE)</button>
+        <button class="btn btn-outline btn-sm" onclick="decideTicket('${d.id}','TỪ CHỐI')">❌ TỪ CHỐI (REJECT)</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function decideTicket(id, decision){
+  approvalDecisions[id] = decision;
+  renderApprovalTickets();
+  renderHtmlIframe();
+}
+
+function renderAuditLogs(){
+  $('auditLogArea').innerHTML = evaluatedDossiers.map(d => `
+    <div class="audit-item">
+      <div style="font-weight:800;color:var(--accent-deep);margin-bottom:6px">${esc(d.id)} — ${esc(d.customer)} (${d.final_status})</div>
+      ${d.audit_logs.map((l, i)=>`
+        <div style="font-size:.78rem;padding:4px 0;border-top:1px dashed var(--border-light)">
+          <b>Bước ${i+1}: ${esc(l.step)}</b> → <code>${esc(l.action)}</code> <span style="color:var(--t3)">(${esc(l.rule)})</span>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
+// BƯỚC 8: XUẤT BÁO CÁO HTML TRỰC TIẾP TÔNG HỒNG ROSE LUXURY
+function buildReportHtml(){
+  const c = getStatusCounts();
+  const nowStr = new Date().toLocaleString('vi-VN');
+  const rowsHtml = evaluatedDossiers.map(d => {
+    const cls = d.final_status==='CÓ THỂ TIẾP TỤC'?'b-g':d.final_status==='CHỜ DUYỆT'?'b-y':d.final_status==='CẦN BỔ SUNG THÔNG TIN'?'b-o':'b-r';
+    return `<tr>
+      <td style="font-weight:700;color:#9d174d">${esc(d.id)}</td>
+      <td><b>${esc(d.customer)}</b><div style="font-size:11px;color:#9d174d">NVKD: ${esc(d.rep.name)} (${d.rep.id})</div></td>
+      <td style="text-align:right">${fmtVnd(d.budget)}</td>
+      <td style="text-align:center">${d.days ? d.days+' ngày' : '<span style="color:#94a3b8">Thiếu</span>'}</td>
+      <td style="text-align:right;font-weight:700;color:#be185d">${d.pricing ? fmtVnd(d.pricing.finalPrice) : '—'}</td>
+      <td style="text-align:center"><span style="background:#fdf2f8;color:#db2777;border:1px solid #fbcfe8;padding:2px 7px;border-radius:10px;font-weight:700;font-size:11px">${d.pricing ? d.pricing.appliedDisc+'%' : '0%'}</span></td>
+      <td><span class="${cls}">${d.final_status}</span></td>
+      <td style="font-size:11.5px;color:#475569">${esc(d.next_action)}</td>
+    </tr>`;
+  }).join('');
+
+  return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Báo Cáo Phân Tích Dữ Liệu B2B — ${MANAGER_NAME}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;color:#1e293b;background:#fff5f7;background-image:radial-gradient(#fbcfe8 1px,transparent 1px);background-size:20px 20px;padding:26px 18px;line-height:1.5;font-size:13px}
+  .wrap{max-width:1020px;margin:0 auto;background:#fff;border-radius:16px;border:1px solid #fbcfe8;box-shadow:0 10px 30px rgba(236,72,153,0.12);overflow:hidden}
+  .ribbon{height:8px;background:linear-gradient(135deg,#ec4899,#f43f5e,#a855f7)}
+  .inner{padding:32px 36px}
+  .h{border-bottom:2px solid #fbcfe8;padding-bottom:16px;margin-bottom:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px}
+  .pill{display:inline-block;font-size:10.5px;font-weight:800;padding:3px 10px;border-radius:20px;background:#fce7f3;color:#be185d;border:1px solid #f9a8d4;margin-bottom:8px}
+  h1{font-size:14.5px;text-transform:uppercase;color:#831843}
+  h2{font-size:20px;color:#be185d;margin-top:3px;font-weight:800}
+  .meta{font-size:11.5px;color:#831843;text-align:right;background:#fdf2f8;padding:10px 14px;border-radius:10px;border:1px solid #f9a8d4;line-height:1.7}
+  .kpi-r{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .kc{background:#fffafb;border:1px solid #fbcfe8;padding:14px;border-radius:10px}
+  .kv{font-size:22px;font-weight:800;color:#0f172a;margin:2px 0}
+  .banner{background:linear-gradient(135deg,#831843,#be185d,#ec4899);color:#fff;padding:18px 22px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+  table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:24px;border:1px solid #fbcfe8}
+  th{background:#fce7f3;color:#831843;text-align:left;padding:9px 10px;border-bottom:1.5px solid #f9a8d4;text-transform:uppercase;font-size:10.5px}
+  td{padding:9px 10px;border-bottom:1px solid #fdf2f8;vertical-align:middle}
+  .b-g{background:#dcfce7;color:#15803d;padding:3px 7px;border-radius:12px;font-weight:700;font-size:10.5px;white-space:nowrap}
+  .b-y{background:#fef3c7;color:#b45309;padding:3px 7px;border-radius:12px;font-weight:700;font-size:10.5px;white-space:nowrap}
+  .b-o{background:#fce7f3;color:#be185d;padding:3px 7px;border-radius:12px;font-weight:700;font-size:10.5px;white-space:nowrap}
+  .b-r{background:#ffe4e6;color:#be123c;padding:3px 7px;border-radius:12px;font-weight:700;font-size:10.5px;white-space:nowrap}
+  .sign{display:flex;justify-content:space-between;margin-top:28px;padding-top:16px;border-top:1.5px dashed #f9a8d4}
+  .sign-box{text-align:center;width:230px}
+  .badge-app{margin-top:8px;padding:10px;border:1.5px dashed #f472b6;background:#fdf2f8;color:#be185d;font-weight:800;border-radius:8px;font-family:monospace}
+  @media print{body{background:#fff;padding:0}.wrap{box-shadow:none}.banner,.ribbon,th{ -webkit-print-color-adjust:exact;print-color-adjust:exact }}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="ribbon"></div>
+    <div class="inner">
+      <div class="h">
+        <div>
+          <span class="pill">🌸 TRƯỜNG GIANG ENTERPRISE AI · EXECUTIVE REPORT</span>
+          <h1>HỆ THỐNG PHÂN TÍCH DỮ LIỆU B2B — TRƯỜNG GIANG</h1>
+          <h2>BÁO CÁO PHÂN TÍCH DỮ LIỆU &amp; ĐỀ XUẤT CƠ HỘI BÁN HÀNG B2B</h2>
+          <p style="color:#64748b;font-size:12px;margin-top:3px">Quy trình AI Data Analytics Agent tự động hóa tiếp nhận, làm sạch và thẩm định</p>
+        </div>
+        <div class="meta">
+          <div>Ngày xuất: <b>${nowStr}</b></div>
+          <div>Người phê duyệt: <b>${MANAGER_NAME}</b></div>
+          <div>Trạng thái: <b style="color:#db2777">🌸 ĐÃ KIỂM DUYỆT (CHẶNG 4 ✓)</b></div>
+        </div>
+      </div>
+
+      <div class="kpi-r">
+        <div class="kc"><div style="font-size:10.5px;font-weight:700;color:#9d174d">CÓ THỂ TIẾP TỤC</div><div class="kv" style="color:#15803d">${c.ready}</div><div>${Math.round(c.ready/c.total*100)}% (Trong quyền NVKD)</div></div>
+        <div class="kc"><div style="font-size:10.5px;font-weight:700;color:#9d174d">CHỜ DUYỆT</div><div class="kv" style="color:#b45309">${c.pending}</div><div>${Math.round(c.pending/c.total*100)}% (Trình TPKD)</div></div>
+        <div class="kc"><div style="font-size:10.5px;font-weight:700;color:#9d174d">CẦN BỔ SUNG</div><div class="kv" style="color:#db2777">${c.info}</div><div>${Math.round(c.info/c.total*100)}% (Khuyết ngân sách/hạn)</div></div>
+        <div class="kc"><div style="font-size:10.5px;font-weight:700;color:#9d174d">CHƯA ĐÁP ỨNG</div><div class="kv" style="color:#be123c">${c.reject}</div><div>${Math.round(c.reject/c.total*100)}% (Vượt trần 15%/hụt kho)</div></div>
+      </div>
+
+      <div class="banner">
+        <div>
+          <div style="font-size:11px;color:#fbcfe8;font-weight:800;text-transform:uppercase">💎 TỔNG DOANH SỐ TIỀM NĂNG (ĐỦ ĐIỀU KIỆN TIẾP TỤC HOẶC CHỜ DUYỆT)</div>
+          <div style="font-size:11.5px;color:#fce7f3;margin-top:3px">Tính riêng biệt từ ${c.ready + c.pending} cơ hội khả thi, loại trừ tuyệt đối đơn thiếu dữ liệu hoặc vi phạm trần chính sách.</div>
+        </div>
+        <div style="font-size:23px;font-weight:800">${fmtVnd(c.totalEligibleVal)}</div>
+      </div>
+
+      <h3 style="font-size:13.5px;text-transform:uppercase;color:#831843;margin-bottom:10px">📋 BẢNG ĐỐI SOÁT CHI TIẾT TỪNG CƠ HỘI BÁN HÀNG (${c.total} YÊU CẦU)</h3>
+      <table>
+        <thead>
+          <tr><th>Mã Đơn</th><th>Khách Hàng</th><th style="text-align:right">Ngân Sách</th><th style="text-align:center">Hạn Giao</th><th style="text-align:right">Giá Đề Xuất</th><th style="text-align:center">CK</th><th>Phân Loại</th><th>Căn Cứ &amp; Bước Xử Lý Tiếp Theo</th></tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+
+      <div class="sign">
+        <div class="sign-box">
+          <div style="font-weight:800;color:#831843">NGƯỜI LẬP BÁO CÁO</div>
+          <div style="font-size:11px;color:#64748b">AI Data Analytics Agent</div>
+          <div class="badge-app" style="color:#7e22ce;background:#faf5ff;border-color:#d8b4fe">✨ VERIFIED AI SYSTEM</div>
+          <div style="font-size:12px;font-weight:700;margin-top:6px">SalesOpportunityAgent v2.0</div>
+        </div>
+        <div class="sign-box">
+          <div style="font-weight:800;color:#831843">TRƯỞNG PHÒNG KINH DOANH</div>
+          <div style="font-size:11px;color:#64748b">Chốt chặn phê duyệt cuối</div>
+          <div class="badge-app">🌸 DIGITALLY APPROVED ✓</div>
+          <div style="font-size:12px;font-weight:700;margin-top:6px">${MANAGER_NAME}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+function renderHtmlIframe(){
+  $('reportFrame').srcdoc = buildReportHtml();
+}
+
+function downloadHtmlReport(){
+  const blob = new Blob([buildReportHtml()], {type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `Bao_Cao_Phan_Tich_B2B_${MANAGER_NAME}.html`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+function downloadFilteredCsv(){
+  const header = "Ma yeu cau,Khach hang,NVKD,Ngan sach,Gia de xuat,Chiet khau %,Phan loai,Buoc tiep theo\n";
+  const rows = evaluatedDossiers.map(d => `"${d.id}","${d.customer}","${d.rep.name}",${d.budget??0},${d.pricing?d.pricing.finalPrice:0},${d.pricing?d.pricing.appliedDisc:0},"${d.final_status}","${d.next_action.replace(/"/g,'""')}"`).join("\n");
+  const blob = new Blob(["\ufeff"+header+rows], {type:"text/csv;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `Bao_cao_co_hoi_${MANAGER_NAME}.csv`; a.click(); URL.revokeObjectURL(url);
+}
+
+function printReport(){
+  const win = window.open('', '_blank');
+  win.document.write(buildReportHtml());
+  win.document.close(); win.focus();
+  setTimeout(() => win.print(), 350);
+}
+
+// KHỞI ĐỘNG
+initReferenceCards();
+showStage(1);
+</script>
+</body>
+</html>
